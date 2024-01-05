@@ -15,6 +15,7 @@ import { Persona } from './entity/persona.entity'
 import { UsuarioRol } from '../authorization/entity/usuario-rol.entity'
 import { Rol } from '../authorization/entity/rol.entity'
 import { FeedbackRepository } from 'src/application/feedback/repository'
+import { NotaRepository } from 'src/application/nota/repository'
 
 @Module({
   providers: [
@@ -24,6 +25,7 @@ import { FeedbackRepository } from 'src/application/feedback/repository'
     UsuarioRolRepository,
     RolRepository,
     FeedbackRepository,
+    NotaRepository
   ],
   exports: [UsuarioService],
   imports: [

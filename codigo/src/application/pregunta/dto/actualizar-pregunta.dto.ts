@@ -2,10 +2,6 @@ import { ApiProperty } from '@nestjs/swagger'
 import { IsNotEmpty } from '../../../common/validation'
 
 export class ActualizarPreguntaDto {
-  @ApiProperty({ example: 'TD-CI' })
-  @IsNotEmpty()
-  @ApiProperty({ example: 'TD-2' })
-  codigo: string
 
   @ApiProperty({ example: 'Cuanto es 20x20?' })
   @IsNotEmpty()

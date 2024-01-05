@@ -9,7 +9,6 @@ import {
   USUARIO_NORMAL,
   USUARIO_SISTEMA,
 } from '../../../common/constants'
-import { Configurations } from '../../../common/params'
 import { Messages } from '../../../common/constants/response-messages'
 import dayjs from 'dayjs'
 import { MensajeriaService } from '../../external-services/mensajeria/mensajeria.service'

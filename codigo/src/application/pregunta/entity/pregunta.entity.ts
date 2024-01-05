@@ -13,7 +13,6 @@ import {
 import dotenv from 'dotenv'
 import { AuditoriaEntity } from '../../../common/entity/auditoria.entity'
 import { PreguntaEstado } from '../constant'
-import { Usuario } from 'src/core/usuario/entity/usuario.entity'
 import { Leccion } from 'src/application/leccion/entity'
 import { Respuesta } from 'src/application/respuesta/entity'
 import { Feedback } from 'src/application/feedback/entity'
@@ -31,15 +30,7 @@ export class Pregunta extends AuditoriaEntity {
   id: string
 
   @Column({
-    length: 15,
-    type: 'varchar',
-    unique: true,
-    comment: 'Código de pregunta',
-  })
-  codigo: string
-
-  @Column({
-    length: 600,
+    length: 1000,
     type: 'varchar',
     unique: true,
     comment: 'Texto de pregunta',
@@ -62,6 +53,15 @@ export class Pregunta extends AuditoriaEntity {
   constructor(data?: Partial<Pregunta>) {
     super(data)
   }
+
+  @Column({
+    name: 'es_imagen',
+    type: 'boolean',
+    default: false,
+    nullable: false,
+    comment: 'Indica si la pregunta es imagen',
+  })
+  esImagen: boolean
 
   @OneToOne(() => Feedback, (feedback) => feedback.pregunta)
   feedback: Feedback

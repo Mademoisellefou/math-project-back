@@ -9,6 +9,7 @@ import {
 import dayjs from 'dayjs'
 import { Persona } from '../../src/core/usuario/entity/persona.entity'
 import { Leccion } from 'src/application/leccion/entity'
+import { Nota } from 'src/application/nota/entity'
 
 export class usuario1611171041790 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -24,11 +25,19 @@ export class usuario1611171041790 implements MigrationInterface {
       },
       {
         codigo: 'TD-CI-2',
-        idUsuario: '2',
+        idUsuario: '1',
         titulo: 'Algoritmos 2',
         descripcion: 'Algoritmos 2',
         siguiente: '3'
-      }]
+      },
+      {
+        codigo: 'TD-CI-3',
+        idUsuario: '1',
+        titulo: 'Algoritmos 3',
+        descripcion: 'Algoritmos 3',
+        siguiente: 'F'
+      }
+      ]
 
     const nuevaLecciones = itemsLecciones.map((item) => {
       return new Leccion({
@@ -116,7 +125,14 @@ export class usuario1611171041790 implements MigrationInterface {
         transaccion: 'SEEDS',
         usuarioCreacion: USUARIO_SISTEMA,
       })
-      await queryRunner.manager.save(usuario)
+      const usuarioResult = await queryRunner.manager.save(usuario)
+
+      const nota = new Nota({
+        intentos: 0,
+        idUsuario: '1',
+        idLeccion: '1',
+      })
+
     }
   }
 

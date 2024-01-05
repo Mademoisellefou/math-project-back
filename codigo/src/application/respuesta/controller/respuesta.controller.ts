@@ -19,7 +19,6 @@ import { Request } from 'express'
 import {
   ActualizarRespuestaDto,
   CrearRespuestaDto,
-  ParamGrupoDto,
 } from '../dto'
 import {
   ApiBearerAuth,

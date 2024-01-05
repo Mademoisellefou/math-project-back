@@ -11,30 +11,27 @@ import { PaginacionQueryDto } from '../../../common/dto/paginacion-query.dto'
 import { Messages } from '../../../common/constants/response-messages'
 import { ActualizarPreguntaDto } from '../dto'
 import { PreguntaEstado } from '../constant'
+import { UsuarioRepository } from 'src/core/usuario/repository/usuario.repository'
 
 @Injectable()
 export class PreguntaService extends BaseService {
   constructor(
     @Inject(PreguntaRepository)
-    private preguntaRepositorio: PreguntaRepository
+    private preguntaRepositorio: PreguntaRepository,
+    @Inject(UsuarioRepository)
+    private usuarioRepositorio: UsuarioRepository,
   ) {
     super()
   }
 
   async crear(preguntaDto: CrearPreguntaDto, usuarioAuditoria: string) {
-    const preguntaRepetido = await this.preguntaRepositorio.buscarCodigo(
-      preguntaDto.codigo
-    )
-
-    if (preguntaRepetido) {
-      throw new ConflictException(Messages.REPEATED_PARAMETER)
-    }
-
     return await this.preguntaRepositorio.crear(preguntaDto, usuarioAuditoria)
   }
 
-  async listar(paginacionQueryDto: PaginacionQueryDto) {
-    return await this.preguntaRepositorio.listar(paginacionQueryDto)
+  async listar(usuarioAuditora: string) {
+    const usuario = await this.usuarioRepositorio.buscarPorId(usuarioAuditora);
+    if (!usuario) throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
+    return await this.preguntaRepositorio.listar(usuario.idLeccion)
   }
 
   async actualizarDatos(

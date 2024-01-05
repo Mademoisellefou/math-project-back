@@ -9,6 +9,7 @@ export enum Status {
   ACTIVE = 'ACTIVO',
   INACTIVE = 'INACTIVO',
   PENDING = 'PENDIENTE',
+  COMPLETED = 'COMPLETED',
 }
 
 export enum Order {
@@ -36,6 +37,13 @@ export enum Transaccion {
   CREAR = 'CREAR',
   ACTUALIZAR = 'ACTUALIZAR',
 }
+
+export enum LECCION {
+  INICIAL = '1',
+  FINAL = 'F'
+}
+
+
 
 export const USUARIO_SISTEMA = '1'
 export const USUARIO_NORMAL = '0'

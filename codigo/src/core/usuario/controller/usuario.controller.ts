@@ -57,6 +57,23 @@ export class UsuarioController extends BaseController {
   }
 
   @ApiOperation({
+    summary: 'API para obtener el record de un estudiante',
+  })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, CasbinGuard)
+  @Get('record')
+  async recordEstudiante(@Req() req: Request) {
+    const usuarioAuditoria = this.getUser(req)
+    if (!usuarioAuditoria) {
+      throw new BadRequestException(
+        `Es necesario que esté autenticado para consumir este recurso.`
+      )
+    }
+    const result = await this.usuarioService.recordEstudiante(usuarioAuditoria)
+    return this.successList(result)
+  }
+
+  @ApiOperation({
     summary: 'API para obtener el listado de Leccion de estudiantes',
   })
   @ApiBearerAuth()
@@ -78,22 +95,6 @@ export class UsuarioController extends BaseController {
     return this.successList(result)
   }
 
-  @ApiOperation({ summary: 'API para obtener una leccion de un usuario' })
-  @ApiBearerAuth()
-  @ApiProperty({
-    type: ParamIdDto,
-  })
-  @UseGuards(JwtAuthGuard, CasbinGuard)
-  @Get('/:id/leccion')
-  async obtenerLeccion(@Req() req: Request, @Param() params: ParamIdDto) {
-    const { id: idLeccion } = params
-    const usuarioAuditoria = this.getUser(req)
-    const result = await this.usuarioService.obtenerLeccion(
-      idLeccion,
-      usuarioAuditoria
-    )
-    return this.successList(result)
-  }
 
   @ApiOperation({ summary: 'Obtiene la información del perfil del usuario' })
   @ApiBearerAuth()
@@ -129,21 +130,6 @@ export class UsuarioController extends BaseController {
     return this.successCreate(result)
   }
 
-  // activar usuario
-  @ApiOperation({ summary: 'API para activar una Cuenta' })
-  @ApiBody({
-    type: ActivarCuentaDto,
-    description: 'Cuenta',
-    required: true,
-  })
-  @Patch('/cuenta/activacion')
-  async activarCuenta(@Body() activarCuentaDto: ActivarCuentaDto) {
-    const result = await this.usuarioService.activarCuenta(
-      activarCuentaDto.codigo
-    )
-    return this.successUpdate(result, Messages.ACCOUNT_ACTIVED_SUCCESSFULLY)
-  }
-
   // validate restore user account
   @ApiOperation({ summary: 'API para nueva Contraseña' })
   @ApiBody({
@@ -156,24 +142,6 @@ export class UsuarioController extends BaseController {
     const result =
       await this.usuarioService.nuevaContrasenaTransaccion(nuevaContrasenaDto)
     return this.success(result, Messages.SUCCESS_DEFAULT)
-  }
-
-  // activar usuario
-  @ApiOperation({ summary: 'Activa un usuario' })
-  @ApiBearerAuth()
-  @ApiProperty({
-    type: ParamIdDto,
-  })
-  @UseGuards(JwtAuthGuard, CasbinGuard)
-  @Patch('/:id/activacion')
-  async activar(@Req() req: Request, @Param() params: ParamIdDto) {
-    const { id: idUsuario } = params
-    const usuarioAuditoria = this.getUser(req)
-    const result = await this.usuarioService.activar(
-      idUsuario,
-      usuarioAuditoria
-    )
-    return this.successUpdate(result)
   }
 
   // activar usuario
@@ -212,67 +180,7 @@ export class UsuarioController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @ApiOperation({
-    summary: 'Actualiza la contrasena de un usuario authenticado',
-  })
-  @ApiBearerAuth()
-  @ApiBody({
-    type: ActualizarContrasenaDto,
-    description: 'new Rol',
-    required: true,
-  })
-  @UseGuards(JwtAuthGuard, CasbinGuard)
-  @Patch('/cuenta/contrasena')
-  async actualizarContrasena(
-    @Req() req: Request,
-    @Body() body: ActualizarContrasenaDto
-  ) {
-    const idUsuario = this.getUser(req)
-    const { contrasenaActual, contrasenaNueva } = body
-    const result = await this.usuarioService.actualizarContrasena(
-      idUsuario,
-      contrasenaActual,
-      contrasenaNueva
-    )
-    return this.successUpdate(result)
-  }
 
-  @ApiOperation({ summary: 'API para restaurar la contraseña de un usuario' })
-  @ApiBearerAuth()
-  @ApiProperty({
-    type: ParamIdDto,
-  })
-  @UseGuards(JwtAuthGuard, CasbinGuard)
-  @Patch('/:id/restauracion')
-  async restaurarContrasena(@Req() req: Request, @Param() params: ParamIdDto) {
-    const usuarioAuditoria = this.getUser(req)
-    const { id: idUsuario } = params
-    const result = await this.usuarioService.restaurarContrasena(
-      idUsuario,
-      usuarioAuditoria
-    )
-    return this.successUpdate(result, Messages.SUCCESS_RESTART_PASSWORD)
-  }
-
-  @ApiOperation({ summary: 'API para reenviar Correo Activación' })
-  @ApiBearerAuth()
-  @ApiProperty({
-    type: ParamIdDto,
-  })
-  @UseGuards(JwtAuthGuard, CasbinGuard)
-  @Patch('/:id/reenviar')
-  async reenviarCorreoActivacion(
-    @Req() req: Request,
-    @Param() params: ParamIdDto
-  ) {
-    const usuarioAuditoria = this.getUser(req)
-    const { id: idUsuario } = params
-    const result = await this.usuarioService.reenviarCorreoActivacion(
-      idUsuario,
-      usuarioAuditoria
-    )
-    return this.successUpdate(result, Messages.SUCCESS_RESEND_MAIL_ACTIVATION)
-  }
 
   //update user
   @ApiOperation({ summary: 'Actualiza datos de un usuario' })
@@ -302,27 +210,4 @@ export class UsuarioController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @ApiOperation({
-    summary: 'Desbloquea una cuenta bloqueada por muchos intentos fallidos',
-  })
-  @ApiQuery({
-    name: 'id',
-    type: ParamUuidDto,
-  })
-  @Get('cuenta/desbloqueo')
-  async desbloquearCuenta(@Query() query: ParamUuidDto) {
-    const { id: idDesbloqueo } = query
-    const result = await this.usuarioService.desbloquearCuenta(idDesbloqueo)
-    return this.successUpdate(result, Messages.SUCCESS_ACCOUNT_UNLOCK)
-  }
-
-  @Get('/test/codigo/:id')
-  async obtenerCodigo(@Param() params: ParamIdDto) {
-    if (this.configService.get('NODE_ENV') === 'production') {
-      throw new NotFoundException(Messages.EXCEPTION_NOT_FOUND)
-    }
-    const { id: idUsuario } = params
-    const result = await this.usuarioService.obtenerCodigoTest(idUsuario)
-    return this.success(result, Messages.SUCCESS_DEFAULT)
-  }
 }

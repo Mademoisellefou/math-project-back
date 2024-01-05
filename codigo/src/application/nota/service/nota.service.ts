@@ -22,12 +22,6 @@ export class NotaService extends BaseService {
   }
 
   async crear(notaDto: CrearNotaDto, usuarioAuditoria: string) {
-    const notaRepetido = await this.notaRepositorio.buscarCodigo(notaDto.codigo)
-
-    if (notaRepetido) {
-      throw new ConflictException(Messages.REPEATED_PARAMETER)
-    }
-
     return await this.notaRepositorio.crear(notaDto, usuarioAuditoria)
   }
 
@@ -45,6 +39,17 @@ export class NotaService extends BaseService {
     }
     await this.notaRepositorio.actualizar(id, notaDto, usuarioAuditoria)
     return { id }
+  }
+
+  async buscarNotaUsuario(
+    idLeccion: string,
+    usuarioAuditoria: string
+  ) {
+    const nota = await this.notaRepositorio.buscarPorUsuarioLeccion(usuarioAuditoria, idLeccion)
+    if (!nota) {
+      throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
+    }
+    return nota
   }
 
   async activar(idNota: string, usuarioAuditoria: string) {

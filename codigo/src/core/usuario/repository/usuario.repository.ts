@@ -86,26 +86,51 @@ export class UsuarioRepository {
     }
     return await query.getManyAndCount()
   }
+  async recordEstudiante(idUsuario: string) {
+    const query = this.dataSource
+      .getRepository(Usuario)
+      .createQueryBuilder('usuario')
+      .leftJoinAndSelect('usuario.usuarioRol', 'usuarioRol')
+      .leftJoinAndSelect('usuarioRol.rol', 'rol')
+      .leftJoinAndSelect('usuario.notas', 'notas')
+      .leftJoinAndSelect('notas.leccion', 'leccion')
+      .leftJoinAndSelect('usuario.persona', 'persona')
+      .select([
+        'usuario.usuario',
+        'usuario.estado',
+        'rol.rol',
+        'persona.nombres',
+        'persona.primerApellido',
+        'persona.segundoApellido',
+        'notas.leccion',
+        'notas.intentos',
+        'leccion.titulo'
+      ])
+      .where('rol.rol = :nombreRol', { nombreRol: RolEnum.ESTUDIANTE })
+      .where('usuario.id = :idUsuario', { idUsuario: idUsuario })
+    return await query.getOne()
+  }
   async listarLecciones() {
     const query = this.dataSource
       .getRepository(Usuario)
       .createQueryBuilder('usuario')
       .leftJoinAndSelect('usuario.usuarioRol', 'usuarioRol')
       .leftJoinAndSelect('usuarioRol.rol', 'rol')
+      .leftJoinAndSelect('usuario.notas', 'notas')
+      .leftJoinAndSelect('notas.leccion', 'leccion')
       .leftJoinAndSelect('usuario.persona', 'persona')
       .select([
-        'usuario.id',
         'usuario.usuario',
-        'usuario.intentos',
         'usuario.estado',
-        'usuarioRol.estado',
-        'rol.nombre',
         'rol.rol',
         'persona.nombres',
         'persona.primerApellido',
         'persona.segundoApellido',
+        'notas.leccion',
+        'notas.intentos',
+        'leccion.titulo'
       ])
-      .where('usuarioRol.estado = :estado', { estado: Status.ACTIVE })
+      // .where('usuarioRol.estado = :estado', { estado: Status.ACTIVE })
       .where('rol.rol = :nombreRol', { nombreRol: RolEnum.ESTUDIANTE })
     return await query.getManyAndCount()
   }
@@ -127,6 +152,11 @@ export class UsuarioRepository {
       .where({ usuario: usuario })
       .getOne()
   }
+  async menuCompletado() {
+    return await [
+      { nombre: 'Record', ruta: '/record' },
+    ]
+  }
   async menuEstudiante() {
     return await [
       { nombre: 'Lecciones', ruta: '/leccion' },
@@ -135,7 +165,7 @@ export class UsuarioRepository {
   }
   async menuAdministrador() {
     return await [
-      { nombre: 'Reportes', ruta: '/record' },
+      { nombre: 'Reportes', ruta: '/record-estudiantes' },
       { nombre: 'Crear Cuenta', ruta: '/crear-cuenta' },
     ]
   }
@@ -196,17 +226,6 @@ export class UsuarioRepository {
       .getOne()
   }
 
-  async obtenerLeccion(id: string) {
-    const query = this.dataSource
-      .getRepository(Usuario)
-      .createQueryBuilder('usuario')
-      .select(['usuario.id', 'usuario.usuario', 'usuario.estado'])
-      .leftJoinAndSelect('usuario.leccion', 'leccion')
-      .leftJoinAndSelect('leccion.preguntas', 'preguntas')
-      .leftJoinAndSelect('preguntas.respuestas', 'respuestas')
-      .where('usuario.id = :id', { id: id })
-    return await query.getMany()
-  }
 
   async buscarUsuarioPorCorreo(correo: string, transaction?: EntityManager) {
     return await (

@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common'
 import { UsuarioRepository } from '../repository/usuario.repository'
 import {
+  LECCION,
   Modo,
   Status,
   USUARIO_NORMAL,
@@ -34,6 +35,7 @@ import {
 import { PersonaRepository } from '../repository/persona.repository'
 import { FeedbackRepository } from 'src/application/feedback/repository'
 import { RolEnum } from 'src/core/authorization/rol.enum'
+import { NotaRepository } from 'src/application/nota/repository'
 
 @Injectable()
 export class UsuarioService extends BaseService {
@@ -46,6 +48,8 @@ export class UsuarioService extends BaseService {
     private rolRepositorio: RolRepository,
     @Inject(FeedbackRepository)
     private feedbackRepositorio: FeedbackRepository,
+    @Inject(NotaRepository)
+    private notaRepositorio: NotaRepository,
     @Inject(PersonaRepository)
     private personaRepositorio: PersonaRepository,
     private readonly mensajeriaService: MensajeriaService,
@@ -54,6 +58,9 @@ export class UsuarioService extends BaseService {
     private configService: ConfigService
   ) {
     super()
+  }
+  async recordEstudiante(idUsuario: string) {
+    return await this.usuarioRepositorio.recordEstudiante(idUsuario)
   }
 
   async listar(@Query() paginacionQueryDto: FiltrosUsuarioDto) {
@@ -70,7 +77,9 @@ export class UsuarioService extends BaseService {
     const usuario = await this.usuarioRepositorio.buscarPorId(idUsuario)
     if (!usuario) throw new PreconditionFailedException(Messages.INACTIVE_USER)
     if (RolEnum.ESTUDIANTE === rol) {
-      return await this.usuarioRepositorio.menuEstudiante()
+      if (usuario.estado === Status.COMPLETED)
+        return await this.usuarioRepositorio.menuCompletado();
+      else { return await this.usuarioRepositorio.menuEstudiante() }
     }
     if (RolEnum.ADMINISTRADOR === rol) {
       return await this.usuarioRepositorio.menuAdministrador()
@@ -121,6 +130,12 @@ export class UsuarioService extends BaseService {
         transaction
       )
 
+
+      await this.notaRepositorio.crear({
+        intentos: 0,
+        idLeccion: LECCION.INICIAL,
+      }, usuario.id)
+
       return {
         finalizado: true,
         mensaje: 'Registro creado con éxito.',
@@ -167,13 +182,6 @@ export class UsuarioService extends BaseService {
 
     return { id: usuarioActualizado.id, estado: usuarioActualizado.estado }
   }
-  async obtenerLeccion(id: string, usuarioAuditoria: string) {
-    if (!usuarioAuditoria) {
-      throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
-    }
-    return await this.usuarioRepositorio.obtenerLeccion(id)
-  }
-
 
   async nuevaContrasenaTransaccion(nuevaContrasenaDto: NuevaContrasenaDto) {
     const usuario = await this.usuarioRepositorio.buscarPorCodigoTransaccion(

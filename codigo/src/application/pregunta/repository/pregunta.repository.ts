@@ -3,10 +3,11 @@ import { Injectable } from '@nestjs/common'
 import { ActualizarPreguntaDto, CrearPreguntaDto } from '../dto'
 import { Pregunta } from '../entity'
 import { PaginacionQueryDto } from '../../../common/dto/paginacion-query.dto'
+import { Status } from 'src/common/constants'
 
 @Injectable()
 export class PreguntaRepository {
-  constructor(private dataSource: DataSource) {}
+  constructor(private dataSource: DataSource) { }
 
   async buscarPorId(id: string) {
     return await this.dataSource
@@ -37,7 +38,6 @@ export class PreguntaRepository {
       .leftJoinAndSelect('pregunta.respuestas', 'respuesta')
       .select([
         'pregunta.id',
-        'pregunta.codigo',
         'pregunta.texto',
         'pregunta.idLeccion',
         'pregunta.estado',
@@ -47,57 +47,34 @@ export class PreguntaRepository {
       .where('pregunta.idLeccion = :idLeccion', { idLeccion: idLeccion })
     return await query.getManyAndCount()
   }
-
-  async listar(paginacionQueryDto: PaginacionQueryDto) {
-    const { limite, saltar, filtro, orden, sentido } = paginacionQueryDto
+  getRndInteger = (min: number, max: number) => {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+  async listar(idLeccion: string, limite: number = 5) {
+    const saltar = this.getRndInteger(1, 14);
     const query = this.dataSource
       .getRepository(Pregunta)
       .createQueryBuilder('pregunta')
       .leftJoinAndSelect('pregunta.respuestas', 'respuesta')
       .select([
         'pregunta.id',
-        'pregunta.codigo',
         'pregunta.texto',
+        'pregunta.esImagen',
         'pregunta.idLeccion',
         'pregunta.estado',
         'respuesta.id',
+        'respuesta.texto',
         'respuesta.esCorrecta',
       ])
+      .where({ idLeccion: idLeccion })
+      .andWhere({ estado: Status.ACTIVE })
       .take(limite)
       .skip(saltar)
-
-    switch (orden) {
-      case 'codigo':
-        query.addOrderBy('pregunta.codigo', sentido)
-        break
-      case 'estado':
-        query.addOrderBy('pregunta.estado', sentido)
-        break
-      default:
-        query.orderBy('pregunta.id', 'ASC')
-    }
-
-    if (filtro) {
-      query.andWhere(
-        new Brackets((qb) => {
-          qb.orWhere('pregunta.codigo like :filtro', { filtro: `%${filtro}%` })
-        })
-      )
-    }
-    return await query.getManyAndCount()
-  }
-
-  async buscarCodigo(codigo: string) {
-    return this.dataSource
-      .getRepository(Pregunta)
-      .findOne({ where: { codigo: codigo } })
+    return await query.getMany()
   }
 
   async crear(preguntaDto: CrearPreguntaDto, usuarioAuditoria: string) {
-    const { codigo } = preguntaDto
-
     const pregunta = new Pregunta()
-    pregunta.codigo = codigo
     pregunta.texto = preguntaDto.texto
     pregunta.idLeccion = preguntaDto.idLeccion
     pregunta.usuarioCreacion = usuarioAuditoria

@@ -40,7 +40,6 @@ export class RespuestaRepository {
       .createQueryBuilder('respuesta')
       .select([
         'respuesta.id',
-        'respuesta.codigo',
         'respuesta.texto',
         'respuesta.idPregunta',
         'respuesta.esCorrecta',
@@ -50,31 +49,15 @@ export class RespuestaRepository {
       .skip(saltar)
 
     switch (orden) {
-      case 'codigo':
-        query.addOrderBy('respuesta.codigo', sentido)
-        break
       case 'estado':
         query.addOrderBy('respuesta.estado', sentido)
         break
       default:
         query.orderBy('respuesta.id', 'ASC')
     }
-
-    if (filtro) {
-      query.andWhere(
-        new Brackets((qb) => {
-          qb.orWhere('respuesta.codigo like :filtro', { filtro: `%${filtro}%` })
-        })
-      )
-    }
     return await query.getManyAndCount()
   }
 
-  async buscarCodigo(codigo: string) {
-    return this.dataSource
-      .getRepository(Respuesta)
-      .findOne({ where: { codigo: codigo } })
-  }
   async respuestasLeccion(
     respuestaDto: ObtenerLeccionDto,
     usuarioAuditoria: string
@@ -93,9 +76,7 @@ export class RespuestaRepository {
     return await this.dataSource.getRepository(Feedback).save(feedbacks)
   }
   async crear(respuestaDto: CrearRespuestaDto, usuarioAuditoria: string) {
-    const { codigo } = respuestaDto
     const respuesta = new Respuesta()
-    respuesta.codigo = codigo
     respuesta.texto = respuestaDto.texto
     respuesta.esCorrecta = respuestaDto.esCorrecta
     respuesta.idPregunta = respuestaDto.idPregunta

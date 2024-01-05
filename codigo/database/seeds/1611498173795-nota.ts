@@ -9,13 +9,14 @@ export class nota1611498173795 implements MigrationInterface {
       {
         codigo: 'TD-CI',
         idUsuario: '1',
+        idLeccion: '1'
       },
     ]
     const notas = items.map((item) => {
       return new Nota({
-        codigo: item.codigo,
-        puntaje: '89',
+        intentos: 2,
         idUsuario: item.idUsuario,
+        idLeccion: item.idLeccion,
         estado: 'ACTIVO',
         transaccion: 'SEEDS',
         usuarioCreacion: USUARIO_SISTEMA,

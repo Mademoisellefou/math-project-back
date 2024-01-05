@@ -2,9 +2,6 @@ import { IsNotEmpty, IsOptional } from '../../../common/validation'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class CrearPreguntaDto {
-  @ApiProperty({ example: 'TD-CI' })
-  @IsNotEmpty()
-  codigo: string
 
   @ApiProperty({ example: 'Cuanto es 20x20?' })
   @IsNotEmpty()

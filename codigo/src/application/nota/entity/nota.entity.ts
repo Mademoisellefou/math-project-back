@@ -12,6 +12,7 @@ import dotenv from 'dotenv'
 import { AuditoriaEntity } from '../../../common/entity/auditoria.entity'
 import { NotaEstado } from '../constant'
 import { Usuario } from 'src/core/usuario/entity/usuario.entity'
+import { Leccion } from 'src/application/leccion/entity'
 
 dotenv.config()
 
@@ -26,21 +27,12 @@ export class Nota extends AuditoriaEntity {
   id: string
 
   @Column({
-    length: 15,
-    type: 'varchar',
-    unique: true,
-    comment: 'Código de nota',
+    type: 'integer',
+    default: 0,
+    comment: 'número de intentos de lecciones',
   })
-  codigo: string
-
-  @Column({
-    length: 15,
-    type: 'varchar',
-    unique: true,
-    comment: 'Puntaje de nota',
-  })
-  puntaje: string
-
+  intentos: number
+  
   @Column({
     name: 'id_usuario',
     type: 'varchar',
@@ -50,6 +42,16 @@ export class Nota extends AuditoriaEntity {
   @ManyToOne(() => Usuario, (usuario) => usuario.notas, { nullable: false })
   @JoinColumn({ name: 'id_usuario', referencedColumnName: 'id' })
   usuario: Usuario
+
+  @Column({
+    name: 'id_leccion',
+    type: 'varchar',
+    comment: 'Clave foránea del leccion',
+  })
+  idLeccion: string
+  @ManyToOne(() => Leccion, (leccion) => leccion.notas, { nullable: false })
+  @JoinColumn({ name: 'id_leccion', referencedColumnName: 'id' })
+  leccion: Leccion
 
   constructor(data?: Partial<Nota>) {
     super(data)

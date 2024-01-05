@@ -41,13 +41,4 @@ describe('RespuestaService', () => {
     expect(respuestas.length).toEqual(2)
   })
 
-  it('[crear] Debería crear un nuevo respuesta', async () => {
-    const respuesta = new CrearRespuestaDto()
-    respuesta.codigo = resRespuesta.codigo
-
-    const usuarioAuditoria = TextService.generateUuid()
-    const result = await service.crear(respuesta, usuarioAuditoria)
-    expect(result).toBeDefined()
-    expect(result.codigo).toEqual(respuesta.codigo)
-  })
 })

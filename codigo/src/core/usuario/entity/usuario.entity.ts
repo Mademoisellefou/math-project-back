@@ -26,6 +26,7 @@ export const UsuarioEstado = {
   INACTIVE: Status.INACTIVE,
   CREATE: Status.CREATE,
   PENDING: Status.PENDING,
+  COMPLETED: Status.COMPLETED,
 }
 
 @Check(UtilService.buildStatusCheck(UsuarioEstado))

@@ -7,7 +7,7 @@ import { NotaEstado } from '../constant'
 
 @Injectable()
 export class NotaRepository {
-  constructor(private dataSource: DataSource) {}
+  constructor(private dataSource: DataSource) { }
 
   async buscarPorId(id: string) {
     return await this.dataSource
@@ -16,6 +16,16 @@ export class NotaRepository {
       .where({ id: id })
       .getOne()
   }
+
+  async buscarPorUsuarioLeccion(idUsuario: string, idLeccion: string) {
+    return await this.dataSource
+      .getRepository(Nota)
+      .createQueryBuilder('nota')
+      .where({ idUsuario: idUsuario })
+      .andWhere({ idLeccion: idLeccion })
+      .getOne()
+  }
+
 
   async actualizar(
     id: string,
@@ -34,23 +44,26 @@ export class NotaRepository {
     const query = this.dataSource
       .getRepository(Nota)
       .createQueryBuilder('nota')
+      .leftJoinAndSelect('nota.usuario', 'usuario')
+      .leftJoinAndSelect('usuario.persona', 'persona')
+      .leftJoinAndSelect('nota.leccion', 'leccion')
       .select([
         'nota.id',
-        'nota.codigo',
-        'nota.puntaje',
+        'nota.intentos',
         'nota.idUsuario',
+        'nota.idLeccion',
         'nota.estado',
+        'usuario.usuario',
+        'leccion.titulo',
+        'usuario.persona',
+        'persona.nombres',
+        'persona.primerApellido',
+        'persona.segundoApellido',
       ])
       .take(limite)
       .skip(saltar)
 
     switch (orden) {
-      case 'codigo':
-        query.addOrderBy('nota.codigo', sentido)
-        break
-      case 'puntaje':
-        query.addOrderBy('nota.puntaje', sentido)
-        break
       case 'estado':
         query.addOrderBy('nota.estado', sentido)
         break
@@ -61,28 +74,19 @@ export class NotaRepository {
     if (filtro) {
       query.andWhere(
         new Brackets((qb) => {
-          qb.orWhere('nota.codigo like :filtro', { filtro: `%${filtro}%` })
+          qb.orWhere('nota.intentos like :filtro', { filtro: `%${filtro}%` })
         })
       )
     }
     return await query.getManyAndCount()
   }
 
-  async buscarCodigo(codigo: string) {
-    return this.dataSource
-      .getRepository(Nota)
-      .findOne({ where: { codigo: codigo } })
-  }
-
   async crear(notaDto: CrearNotaDto, usuarioAuditoria: string) {
-    const { codigo } = notaDto
-
     const nota = new Nota()
-    nota.codigo = codigo
-    nota.puntaje = notaDto.puntaje
+    nota.intentos = notaDto.intentos
     nota.idUsuario = usuarioAuditoria
     nota.usuarioCreacion = usuarioAuditoria
-
+    nota.idLeccion = notaDto.idLeccion
     return await this.dataSource.getRepository(Nota).save(nota)
   }
 }

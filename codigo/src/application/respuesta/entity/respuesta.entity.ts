@@ -26,18 +26,11 @@ export class Respuesta extends AuditoriaEntity {
   })
   id: string
 
-  @Column({
-    length: 15,
-    type: 'varchar',
-    unique: true,
-    comment: 'Código de respuesta',
-  })
-  codigo: string
 
   @Column({
     length: 500,
     type: 'varchar',
-    unique: true,
+    unique: false,
     comment: 'Texto de respuesta',
   })
   texto: string

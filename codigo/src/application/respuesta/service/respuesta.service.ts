@@ -15,6 +15,9 @@ import { ObtenerLeccionDto, RespuestasDto } from '../dto/leccion-respuesta.dto'
 import { FeedbackRepository } from 'src/application/feedback/repository'
 import { LeccionRepository } from 'src/application/leccion/repository'
 import { UsuarioRepository } from 'src/core/usuario/repository/usuario.repository'
+import { NotaRepository } from 'src/application/nota/repository'
+import { CrearNotaDto } from 'src/application/nota/dto'
+import { LECCION, Status } from 'src/common/constants'
 
 @Injectable()
 export class RespuestaService extends BaseService {
@@ -26,9 +29,65 @@ export class RespuestaService extends BaseService {
     @Inject(UsuarioRepository)
     private usuarioRepositorio: UsuarioRepository,
     @Inject(LeccionRepository)
-    private leccionRepositorio: LeccionRepository
+    private leccionRepositorio: LeccionRepository,
+    @Inject(NotaRepository)
+    private notaRepositorio: NotaRepository
   ) {
     super()
+  }
+  async siguienteNivel(usuarioAuditoria: string) {
+    console.log('siguienteNivel');
+    const usuarioLeccionId =
+      await this.usuarioRepositorio.buscarPorId(usuarioAuditoria)
+    if (!usuarioLeccionId) {
+      throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
+    }
+    const leccion = await this.leccionRepositorio.buscarPorId(
+      usuarioLeccionId.idLeccion
+    )
+    if (!leccion) {
+      throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
+    }
+    if (leccion.siguiente != LECCION.FINAL) {
+      await this.usuarioRepositorio.actualizar(
+        usuarioAuditoria,
+        {
+          idLeccion: leccion?.siguiente,
+        },
+        usuarioAuditoria
+      )
+      const notaDto = new CrearNotaDto()
+      notaDto.intentos = 0
+      notaDto.idLeccion = leccion?.siguiente;
+      await this.notaRepositorio.crear(notaDto, usuarioAuditoria);
+    } else {
+      await this.usuarioRepositorio.actualizar(
+        usuarioAuditoria,
+        { estado: Status.COMPLETED },
+        usuarioAuditoria
+      )
+    }
+  }
+  async aumentarIntentoLeccion(usuarioAuditoria: string) {
+    console.log('aumentarIntentoLeccion');
+
+    const usuarioRespuestas = await this.usuarioRepositorio.buscarPorId(usuarioAuditoria)
+    if (!usuarioRespuestas) {
+      throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
+    }
+    const leccion = await this.leccionRepositorio.buscarPorId(
+      usuarioRespuestas.idLeccion
+    )
+    if (!leccion) {
+      throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
+    }
+    const nota = await this.notaRepositorio.buscarPorUsuarioLeccion(usuarioRespuestas.id, leccion.id);
+    console.log('.///', nota);
+
+    if (!nota) {
+      throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
+    }
+    await this.notaRepositorio.actualizar(nota.id, { intentos: 1 + nota.intentos }, usuarioAuditoria);
   }
   async respuestasLeccion(
     respuestaDto: ObtenerLeccionDto,
@@ -48,56 +107,21 @@ export class RespuestaService extends BaseService {
       }
     }
     const respuestaLeccion = new ObtenerLeccionDto()
-    respuestaLeccion.respuestas = []
-    if (respuestas.length > 0) {
-      respuestaLeccion.respuestas = respuestas
-    }
+    respuestaLeccion.respuestas = respuestas
     const repaso = await this.respuestaRepositorio.respuestasLeccion(
       respuestaLeccion,
       usuarioAuditoria
     )
-    if (repaso.length < 1) {
-      const usuarioLeccionId =
-        await this.usuarioRepositorio.buscarPorId(usuarioAuditoria)
-      if (!usuarioLeccionId) {
-        throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
-      }
-      const leccion = await this.leccionRepositorio.buscarPorId(
-        usuarioLeccionId.idLeccion
-      )
-      if (!leccion) {
-        throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
-      }
-      await this.usuarioRepositorio.actualizar(
-        usuarioAuditoria,
-        {
-          idLeccion: leccion?.siguiente,
-        },
-        usuarioAuditoria
-      )
+    const tieneRepaso = await this.feedbackRepositorio.buscarPorId(usuarioAuditoria);
+    if (!tieneRepaso && repaso.length < 1) {
+      this.siguienteNivel(usuarioAuditoria);
     } else {
-      const usuarioRespuestas = await this.usuarioRepositorio.buscarPorId(usuarioAuditoria)
-      if (!usuarioRespuestas) {
-        throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
-      }
-      await this.usuarioRepositorio.actualizar(
-        usuarioAuditoria,
-        {
-          intentos: usuarioRespuestas.intentos + 1
-        },
-        usuarioAuditoria
-      )
+      this.aumentarIntentoLeccion(usuarioAuditoria)
     }
     return repaso
   }
 
   async crear(respuestaDto: CrearRespuestaDto, usuarioAuditoria: string) {
-    const respuestaRepetido = await this.respuestaRepositorio.buscarCodigo(
-      respuestaDto.codigo
-    )
-    if (respuestaRepetido) {
-      throw new ConflictException(Messages.REPEATED_PARAMETER)
-    }
     return await this.respuestaRepositorio.crear(respuestaDto, usuarioAuditoria)
   }
   async listar(paginacionQueryDto: PaginacionQueryDto) {

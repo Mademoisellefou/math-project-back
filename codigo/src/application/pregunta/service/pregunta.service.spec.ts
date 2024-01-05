@@ -41,14 +41,4 @@ describe('PreguntaService', () => {
     expect(preguntas.length).toEqual(2)
   })
 
-  it('[crear] Debería crear un nuevo pregunta', async () => {
-    const pregunta = new CrearPreguntaDto()
-    pregunta.codigo = resPregunta.codigo
-    pregunta.texto = resPregunta.texto
-    pregunta.idLeccion = resPregunta.idLecccion
-    const usuarioAuditoria = TextService.generateUuid()
-    const result = await service.crear(pregunta, usuarioAuditoria)
-    expect(result).toBeDefined()
-    expect(result.codigo).toEqual(pregunta.codigo)
-  })
 })

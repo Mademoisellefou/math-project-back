@@ -69,6 +69,16 @@ export class NotaController extends BaseController {
     description: 'new Rol',
     required: true,
   })
+
+  @ApiOperation({ summary: 'API para actualizar un nota' })
+  @ApiProperty({
+    type: ParamIdDto,
+  })
+  @ApiBody({
+    type: ActualizarNotaDto,
+    description: 'new Rol',
+    required: true,
+  })
   @Patch(':id')
   async actualizar(
     @Param() params: ParamIdDto,

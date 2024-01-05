@@ -89,29 +89,18 @@ export class insertCasbinRules1617712857472 implements MigrationInterface {
       '/api/usuarios/menu': {
         [RolEnum.TODOS]: 'GET',
       },
+      '/api/usuarios/record': {
+        [RolEnum.TODOS]: 'GET',
+      },
       '/api/usuarios/:id': {
         [RolEnum.ADMINISTRADOR]: 'PATCH',
       },
       '/api/usuarios/:id/perfil': {
         [RolEnum.TODOS]: 'GET',
       },
-      '/api/usuarios/:id/activacion': {
-        [RolEnum.ADMINISTRADOR]: 'PATCH',
-      },
-
       '/api/usuarios/:id/inactivacion': {
         [RolEnum.ADMINISTRADOR]: 'PATCH',
       },
-      '/api/usuarios/:id/restauracion': {
-        [RolEnum.ADMINISTRADOR]: 'PATCH',
-      },
-      '/api/usuarios/:id/leccion': {
-        [RolEnum.TODOS]: 'GET',
-      },
-      '/api/usuarios/:id/reenviar': {
-        [RolEnum.ADMINISTRADOR]: 'PATCH',
-      },
-
       '/api/parametros': {
         [RolEnum.ADMINISTRADOR]: 'GET|POST',
         [RolEnum.PROFESOR]: 'GET|POST',
@@ -119,7 +108,6 @@ export class insertCasbinRules1617712857472 implements MigrationInterface {
       '/api/parametros/:id': {
         [RolEnum.ADMINISTRADOR]: 'PATCH',
       },
-
       '/api/parametros/:id/activacion': {
         [RolEnum.ADMINISTRADOR]: 'PATCH',
       },
@@ -140,10 +128,6 @@ export class insertCasbinRules1617712857472 implements MigrationInterface {
         [RolEnum.TODOS]: 'GET',
       },
 
-      '/api/usuarios/cuenta/contrasena': {
-        [RolEnum.TODOS]: 'PATCH',
-      },
-
       //NUEVAS RUTAS
       '/api/respuestas': {
         [RolEnum.TODOS]: 'GET|POST',
@@ -161,10 +145,10 @@ export class insertCasbinRules1617712857472 implements MigrationInterface {
         [RolEnum.TODOS]: 'PATCH',
       },
       '/api/preguntas': {
-        [RolEnum.TODOS]: 'GET|POST',
+        [RolEnum.TODOS]: 'POST',
       },
       '/api/preguntas/:id': {
-        [RolEnum.TODOS]: 'PATCH',
+        [RolEnum.TODOS]: 'PATCH|GET',
       },
       '/api/preguntas/:id/activacion': {
         [RolEnum.TODOS]: 'PATCH',

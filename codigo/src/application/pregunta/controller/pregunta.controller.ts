@@ -35,18 +35,13 @@ export class PreguntaController extends BaseController {
   }
 
   @ApiOperation({ summary: 'API para obtener el listado de preguntas' })
-  @Get()
-  async listar(@Query() paginacionQueryDto: PaginacionQueryDto) {
-    const result = await this.preguntaServicio.listar(paginacionQueryDto)
-    return this.successListRows(result)
+  @Get(':id')
+  async listar(@Param() params: ParamIdDto) {
+    const { id: idUsuario } = params
+    const result = await this.preguntaServicio.listar(idUsuario)
+    return this.successList(result)
   }
 
-  @ApiOperation({
-    summary: 'API para obtener el listado de preguntas por grupo',
-  })
-  @ApiProperty({
-    type: ParamGrupoDto,
-  })
   @ApiOperation({ summary: 'API para crear un nueva pregunta' })
   @ApiBody({
     type: CrearPreguntaDto,

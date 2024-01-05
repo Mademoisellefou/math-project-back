@@ -4,10 +4,7 @@ import {
   Check,
   Column,
   Entity,
-  JoinColumn,
-  ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import dotenv from 'dotenv'
@@ -15,6 +12,7 @@ import { AuditoriaEntity } from '../../../common/entity/auditoria.entity'
 import { LeccionEstado } from '../constant'
 import { Usuario } from 'src/core/usuario/entity/usuario.entity'
 import { Pregunta } from 'src/application/pregunta/entity'
+import { Nota } from 'src/application/nota/entity'
 
 dotenv.config()
 
@@ -28,11 +26,15 @@ export class Leccion extends AuditoriaEntity {
   })
   id: string
 
+  @OneToMany(() => Nota, (nota) => nota.usuario)
+  notas: Nota[]
+
   @Column({
     length: 15,
     type: 'varchar',
-    unique: true,
-    comment: 'Código de parámetro',
+    unique: false,
+    comment: 'Código de leccion',
+    default: ''
   })
   codigo: string
 
