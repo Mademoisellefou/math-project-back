@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common'
 import { ActualizarRespuestaDto, CrearRespuestaDto } from '../dto'
 import { Respuesta } from '../entity'
 import { PaginacionQueryDto } from '../../../common/dto/paginacion-query.dto'
-import { RespuestaEstado } from '../constant'
 import { ObtenerLeccionDto } from '../dto/leccion-respuesta.dto'
 import { Feedback } from 'src/application/feedback/entity'
 

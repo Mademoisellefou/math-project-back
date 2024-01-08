@@ -154,19 +154,19 @@ export class UsuarioRepository {
   }
   async menuCompletado() {
     return await [
-      { nombre: 'Record', ruta: '/record' },
+      { nombre: 'Record', ruta: '/record', icono: 'clipboard_list_faw5s'},
     ]
   }
   async menuEstudiante() {
     return await [
-      { nombre: 'Lecciones', ruta: '/leccion' },
-      { nombre: 'Repaso', ruta: '/repaso' },
+      { nombre: 'Lecciones', ruta: '/leccion' , icono: 'pencil_alt_faw5s'},
+      { nombre: 'Repaso', ruta: '/repaso' ,icono: 'list_ol_faw5s'},
     ]
   }
   async menuAdministrador() {
     return await [
-      { nombre: 'Reportes', ruta: '/record-estudiantes' },
-      { nombre: 'Crear Cuenta', ruta: '/crear-cuenta' },
+      { nombre: 'Reportes', ruta: '/record-estudiantes' , icono:'trending_up_fea' },
+      { nombre: 'Crear Cuenta', ruta: '/crear-cuenta', icono: 'add_user_ent' },
     ]
   }
   async buscarPorId(id: string, transaction?: EntityManager) {

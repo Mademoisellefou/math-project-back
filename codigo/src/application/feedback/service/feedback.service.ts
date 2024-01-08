@@ -54,9 +54,9 @@ export class FeedbackService extends BaseService {
       throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
     }
     const feedbacks = await this.feedbackRepositorio.repaso(params.id)
-    if (!feedbacks || feedbacks?.length === 0)
-      throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
     const feedbacksRepaso: RepasoFeedbackDto = new RepasoFeedbackDto()
+    if (!feedbacks || feedbacks?.length === 0)
+      return feedbacksRepaso
     feedbacksRepaso.repaso = feedbacks
       .map(({ pregunta }) => {
         return pregunta.respuestas
