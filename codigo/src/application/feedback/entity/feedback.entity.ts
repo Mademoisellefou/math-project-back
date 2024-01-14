@@ -13,7 +13,6 @@ import dotenv from 'dotenv'
 import { AuditoriaEntity } from '../../../common/entity/auditoria.entity'
 import { FeedbackEstado } from '../constant'
 import { Usuario } from 'src/core/usuario/entity/usuario.entity'
-import { Pregunta } from 'src/application/pregunta/entity'
 
 dotenv.config()
 
@@ -31,14 +30,9 @@ export class Feedback extends AuditoriaEntity {
     name: 'id_pregunta',
     type: 'bigint',
     nullable: true,
-    comment: 'Clave Foranea de Pregunta',
+    comment: 'id Pregunta',
   })
   idPregunta: string
-  @OneToOne(() => Pregunta, {
-    nullable: false,
-  })
-  @JoinColumn({ name: 'id_pregunta', referencedColumnName: 'id' })
-  pregunta: Pregunta
 
   @Column({
     name: 'id_usuario',

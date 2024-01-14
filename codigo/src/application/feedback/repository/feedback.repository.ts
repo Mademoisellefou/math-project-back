@@ -10,7 +10,7 @@ import { RolEnum } from 'src/core/authorization/rol.enum'
 
 @Injectable()
 export class FeedbackRepository {
-  constructor(private dataSource: DataSource) {}
+  constructor(private dataSource: DataSource) { }
 
   async buscarPorId(id: string) {
     return await this.dataSource
@@ -46,20 +46,15 @@ export class FeedbackRepository {
       .getMany()
   }
 
-  async repaso(id: string) {
+  async repaso(idLeccion: string, idUsuario: string) {
     return await this.dataSource
       .getRepository(Feedback)
       .createQueryBuilder('feedback')
-      .leftJoinAndSelect('feedback.pregunta', 'pregunta')
-      .leftJoinAndSelect('pregunta.respuestas', 'respuesta')
       .select([
-        'feedback.id',
-        'pregunta.id',
-        'pregunta.texto',
-        'respuesta.esCorrecta',
-        'respuesta.texto',
+        'feedback.idPregunta',
       ])
-      .where({ idUsuario: id })
+      .where({ idUsuario: idUsuario })
+      .andWhere({ idLeccion: idLeccion })
       .getMany()
   }
   async listarFeedback() {

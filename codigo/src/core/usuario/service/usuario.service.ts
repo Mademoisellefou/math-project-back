@@ -131,10 +131,10 @@ export class UsuarioService extends BaseService {
       )
 
 
-      await this.notaRepositorio.crear({
+      await this.notaRepositorio.crearUsuario({
         intentos: 0,
         idLeccion: LECCION.INICIAL,
-      }, usuario.id)
+      }, usuario.id, transaction)
 
       return {
         finalizado: true,

@@ -63,9 +63,6 @@ export class Pregunta extends AuditoriaEntity {
   })
   esImagen: boolean
 
-  @OneToOne(() => Feedback, (feedback) => feedback.pregunta)
-  feedback: Feedback
-
   @BeforeInsert()
   insertarEstado() {
     this.estado = this.estado || PreguntaEstado.ACTIVO

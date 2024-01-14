@@ -15,12 +15,14 @@ import { ParamIdDto } from 'src/common/dto/params-id.dto'
 import { EliminarFeedbackDto } from '../dto/eliminar-feedback.dto'
 import { Status } from 'src/common/constants'
 import { Feeback, RepasoFeedbackDto } from '../dto/repaso-feedback.dto'
+import { UsuarioRepository } from 'src/core/usuario/repository/usuario.repository'
 
 @Injectable()
 export class FeedbackService extends BaseService {
   constructor(
     @Inject(FeedbackRepository)
-    private feedbackRepositorio: FeedbackRepository
+    private feedbackRepositorio: FeedbackRepository,
+    private usuarioRepositorio: UsuarioRepository,
   ) {
     super()
   }
@@ -53,23 +55,27 @@ export class FeedbackService extends BaseService {
     if (!params?.id) {
       throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
     }
-    const feedbacks = await this.feedbackRepositorio.repaso(params.id)
+    const usuario = await this.usuarioRepositorio.buscarPorId(params.id);
+    if (!usuario) throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
+    const feedbacks = await this.feedbackRepositorio.repaso(usuario.idLeccion, usuario.id)
+    console.log('SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSs');
+    console.log(usuario);
     const feedbacksRepaso: RepasoFeedbackDto = new RepasoFeedbackDto()
-    if (!feedbacks || feedbacks?.length === 0)
-      return feedbacksRepaso
-    feedbacksRepaso.repaso = feedbacks
-      .map(({ pregunta }) => {
-        return pregunta.respuestas
-          .filter((respuesta) => respuesta.esCorrecta)
-          .map((respuesta) => {
-            const nuevaFeeback: Feeback = new Feeback()
-            nuevaFeeback.idPregunta = pregunta.id
-            nuevaFeeback.texto = pregunta.texto
-            nuevaFeeback.respuesta = respuesta.texto
-            return nuevaFeeback
-          })
-      })
-      .flat()
+    // if (!feedbacks || feedbacks?.length === 0)
+    //   return feedbacksRepaso
+    // feedbacksRepaso.repaso = feedbacks
+    //   .map(({ pregunta }) => {
+    //     return pregunta.respuestas
+    //       .filter((respuesta) => respuesta.esCorrecta)
+    //       .map((respuesta) => {
+    //         const nuevaFeeback: Feeback = new Feeback()
+    //         nuevaFeeback.idPregunta = pregunta.id
+    //         nuevaFeeback.texto = pregunta.texto
+    //         nuevaFeeback.respuesta = respuesta.texto
+    //         return nuevaFeeback
+    //       })
+    //   })
+    //   .flat()
     return feedbacksRepaso
   }
   async activar(idFeedback: string, usuarioAuditoria: string) {
