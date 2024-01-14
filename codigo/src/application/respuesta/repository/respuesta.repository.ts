@@ -59,7 +59,8 @@ export class RespuestaRepository {
 
   async respuestasLeccion(
     respuestaDto: ObtenerLeccionDto,
-    usuarioAuditoria: string
+    usuarioAuditoria: string,
+    idLeccion: string
   ) {
     const { respuestas } = respuestaDto
     const feedbacks: Feedback[] = []
@@ -68,6 +69,7 @@ export class RespuestaRepository {
         const nuevoFeedback = new Feedback()
         nuevoFeedback.idUsuario = usuarioAuditoria
         nuevoFeedback.idPregunta = respuestas[i].idPregunta
+        nuevoFeedback.idLeccion = idLeccion
         nuevoFeedback.usuarioCreacion = usuarioAuditoria
         feedbacks.push(nuevoFeedback)
       }

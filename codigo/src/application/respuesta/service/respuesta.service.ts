@@ -36,7 +36,6 @@ export class RespuestaService extends BaseService {
     super()
   }
   async siguienteNivel(usuarioAuditoria: string) {
-    console.log('siguienteNivel');
     const usuarioLeccionId =
       await this.usuarioRepositorio.buscarPorId(usuarioAuditoria)
     if (!usuarioLeccionId) {
@@ -69,8 +68,6 @@ export class RespuestaService extends BaseService {
     }
   }
   async aumentarIntentoLeccion(usuarioAuditoria: string) {
-    console.log('aumentarIntentoLeccion');
-
     const usuarioRespuestas = await this.usuarioRepositorio.buscarPorId(usuarioAuditoria)
     if (!usuarioRespuestas) {
       throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
@@ -82,8 +79,6 @@ export class RespuestaService extends BaseService {
       throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
     }
     const nota = await this.notaRepositorio.buscarPorUsuarioLeccion(usuarioRespuestas.id, leccion.id);
-    console.log('.///', nota);
-
     if (!nota) {
       throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
     }
@@ -108,9 +103,13 @@ export class RespuestaService extends BaseService {
     }
     const respuestaLeccion = new ObtenerLeccionDto()
     respuestaLeccion.respuestas = respuestas
+    const usuario = await this.usuarioRepositorio.buscarPorId(usuarioAuditoria)
+    if (!usuario)
+      throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
     const repaso = await this.respuestaRepositorio.respuestasLeccion(
       respuestaLeccion,
-      usuarioAuditoria
+      usuarioAuditoria,
+      usuario.idLeccion
     )
     const tieneRepaso = await this.feedbackRepositorio.buscarPorId(usuarioAuditoria);
     if (!tieneRepaso && repaso.length < 1) {

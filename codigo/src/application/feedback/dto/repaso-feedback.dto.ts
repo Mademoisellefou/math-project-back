@@ -7,7 +7,6 @@ export class Feeback {
   respuesta: string
 }
 export class RepasoFeedbackDto {
-  @ApiProperty({ example: '[{ id: 1}, { id: 2}]' })
-  // @IsNotEmpty()
+  @ApiProperty({ example: 'repaso: [{idPregunta:"",texto:"",respuesta:""}]' })
   repaso: Feeback[]
 }

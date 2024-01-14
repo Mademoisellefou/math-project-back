@@ -31,6 +31,23 @@ export class PreguntaRepository {
       .update(id, datosActualizar)
   }
 
+  async preguntaRepaso(idsPreguntas: string[]) {
+    const query = this.dataSource
+      .getRepository(Pregunta)
+      .createQueryBuilder('pregunta')
+      .leftJoinAndSelect('pregunta.respuestas', 'respuesta')
+      .select([
+        'pregunta.id',
+        'pregunta.texto',
+        'pregunta.idLeccion',
+        'respuesta.id',
+        'respuesta.texto',
+      ])
+      .where("pregunta.id IN (:...ids)", { ids: idsPreguntas })
+      .andWhere('respuesta.esCorrecta = :esCorrecta', { esCorrecta: true })
+    return await query.getMany()
+  }
+
   async preguntasLeccion(idLeccion: string) {
     const query = this.dataSource
       .getRepository(Pregunta)

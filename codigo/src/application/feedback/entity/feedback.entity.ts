@@ -35,6 +35,14 @@ export class Feedback extends AuditoriaEntity {
   idPregunta: string
 
   @Column({
+    name: 'id_leccion',
+    type: 'bigint',
+    nullable: true,
+    comment: 'id Leccion',
+  })
+  idLeccion: string
+
+  @Column({
     name: 'id_usuario',
     type: 'varchar',
     comment: 'Clave foránea de usuario',

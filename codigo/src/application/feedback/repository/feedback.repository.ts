@@ -128,13 +128,14 @@ export class FeedbackRepository {
     return await query.getManyAndCount()
   }
 
-  async crear(feedbackDto: CrearFeedbackDto, usuarioAuditoria: string) {
+  async crear(feedbackDto: CrearFeedbackDto, usuarioAuditoria: string, leccion: string) {
     const { codigo } = feedbackDto
 
     const feedback = new Feedback()
     feedback.idUsuario = usuarioAuditoria
     feedback.idPregunta = feedbackDto.idPregunta
     feedback.usuarioCreacion = usuarioAuditoria
+    feedback.idLeccion = leccion;
     return await this.dataSource.getRepository(Feedback).save(feedback)
   }
 }
