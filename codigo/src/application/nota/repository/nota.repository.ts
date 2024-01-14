@@ -1,4 +1,4 @@
-import { Brackets, DataSource } from 'typeorm'
+import { Brackets, DataSource, EntityManager } from 'typeorm'
 import { Injectable } from '@nestjs/common'
 import { ActualizarNotaDto, CrearNotaDto } from '../dto'
 import { Nota } from '../entity'
@@ -88,5 +88,18 @@ export class NotaRepository {
     nota.usuarioCreacion = usuarioAuditoria
     nota.idLeccion = notaDto.idLeccion
     return await this.dataSource.getRepository(Nota).save(nota)
+  }
+  async crearUsuario(
+    notaDto: CrearNotaDto, usuarioAuditoria: string, transaction?: EntityManager
+  ) {
+    const nota = new Nota()
+    nota.intentos = notaDto.intentos
+    nota.idUsuario = usuarioAuditoria
+    nota.usuarioCreacion = usuarioAuditoria
+    nota.idLeccion = notaDto.idLeccion
+    return await (
+      transaction?.getRepository(Nota) ??
+      this.dataSource.getRepository(Nota)
+    ).save(nota)
   }
 }

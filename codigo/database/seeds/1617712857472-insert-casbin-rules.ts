@@ -4,40 +4,6 @@ import { MigrationInterface, QueryRunner } from 'typeorm'
 
 export class insertCasbinRules1617712857472 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    const frontendRoutes: CasbinValue = {
-      '/admin/usuarios': {
-        [RolEnum.ADMINISTRADOR]: 'read|update|create|delete',
-        [RolEnum.PROFESOR]: 'read',
-      },
-      '/admin/parametros': {
-        [RolEnum.ADMINISTRADOR]: 'read|update|create',
-        [RolEnum.PROFESOR]: 'read',
-      },
-
-      '/admin/modulos': {
-        [RolEnum.ADMINISTRADOR]: 'read|update|create',
-      },
-
-      '/admin/politicas': {
-        [RolEnum.ADMINISTRADOR]: 'create|read|update|delete',
-      },
-
-      '/admin/perfil': {
-        [RolEnum.ADMINISTRADOR]: 'read|update',
-        [RolEnum.PROFESOR]: 'read|update',
-        [RolEnum.ESTUDIANTE]: 'read|update',
-      },
-
-      '/admin/home': {
-        [RolEnum.ADMINISTRADOR]: 'read',
-        [RolEnum.PROFESOR]: 'read',
-        [RolEnum.ESTUDIANTE]: 'read',
-      },
-      '/admin/roles': {
-        [RolEnum.ADMINISTRADOR]: 'read|create|update|delete',
-      },
-    }
-
     const backendRoutes: CasbinValue = {
       '/api/autorizacion/politicas': {
         [RolEnum.ADMINISTRADOR]: 'GET|POST|DELETE|PATCH',
@@ -226,8 +192,6 @@ export class insertCasbinRules1617712857472 implements MigrationInterface {
         }
       }
     }
-
-    await registrarCasbin(frontendRoutes, 'frontend')
     await registrarCasbin(backendRoutes, 'backend')
   }
 

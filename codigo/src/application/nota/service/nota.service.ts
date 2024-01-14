@@ -24,7 +24,6 @@ export class NotaService extends BaseService {
   async crear(notaDto: CrearNotaDto, usuarioAuditoria: string) {
     return await this.notaRepositorio.crear(notaDto, usuarioAuditoria)
   }
-
   async listar(paginacionQueryDto: PaginacionQueryDto) {
     return await this.notaRepositorio.listar(paginacionQueryDto)
   }
