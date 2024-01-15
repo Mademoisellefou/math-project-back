@@ -17,6 +17,7 @@ import { Status } from 'src/common/constants'
 import { Feeback, RepasoFeedbackDto } from '../dto/repaso-feedback.dto'
 import { UsuarioRepository } from 'src/core/usuario/repository/usuario.repository'
 import { PreguntaRepository } from 'src/application/pregunta/repository'
+import { RolEnum } from 'src/core/authorization/rol.enum'
 
 @Injectable()
 export class FeedbackService extends BaseService {
@@ -54,6 +55,16 @@ export class FeedbackService extends BaseService {
     }
     await this.feedbackRepositorio.actualizar(id, feedbackDto, usuarioAuditoria)
     return { id }
+  }
+  async menu(idUsuario: string, rolUsuario: string) {
+    if (!idUsuario) {
+      throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
+    }
+    if (rolUsuario === RolEnum.ESTUDIANTE) {
+      const res = await this.feedbackRepositorio.buscarPorUsuario(idUsuario);
+      return res.length > 0 ? true : false;
+    }
+    return false
   }
   async repaso(params: ParamIdDto) {
     if (!params?.id) {

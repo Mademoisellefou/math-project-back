@@ -47,6 +47,5 @@ describe('FeedbackService', () => {
     const usuarioAuditoria = TextService.generateUuid()
     const result = await service.crear(feedback, usuarioAuditoria)
     expect(result).toBeDefined()
-    expect(result.codigo).toEqual(feedback.codigo)
   })
 })

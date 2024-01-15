@@ -55,6 +55,14 @@ export class FeedbackController extends BaseController {
     const result = await this.feedbackServicio.repaso(params)
     return this.successList(result)
   }
+  @ApiOperation({ summary: 'API para obtener total repaso' })
+  @Get('menu')
+  async menu(@Req() req: Request) {
+    const idUsuario = this.getUser(req);
+    const usuarioRol = this.getRol(req);
+    const result = await this.feedbackServicio.menu(idUsuario, usuarioRol)
+    return this.successList(result)
+  }
 
   @ApiOperation({
     summary: 'API para obtener el listado de feedbacks por grupo',

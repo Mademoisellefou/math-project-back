@@ -19,7 +19,13 @@ export class FeedbackRepository {
       .where({ id: id })
       .getOne()
   }
-
+  async buscarPorUsuario(idUsuario: string) {
+    return await this.dataSource
+      .getRepository(Feedback)
+      .createQueryBuilder('feedback')
+      .where({ idUsuario })
+      .getMany()
+  }
   async buscarPorIdPregunta(idPregunta: string) {
     return await this.dataSource
       .getRepository(Feedback)

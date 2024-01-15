@@ -152,6 +152,9 @@ export class insertCasbinRules1617712857472 implements MigrationInterface {
       '/api/feedbacks': {
         [RolEnum.TODOS]: 'GET|POST',
       },
+      '/api/feedbacks/menu': {
+        [RolEnum.TODOS]: 'GET',
+      },
       '/api/feedbacks/:id/repaso': {
         [RolEnum.TODOS]: 'GET',
       },
