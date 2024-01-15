@@ -111,8 +111,11 @@ export class RespuestaService extends BaseService {
       usuarioAuditoria,
       usuario.idLeccion
     )
-    const tieneRepaso = await this.feedbackRepositorio.buscarPorId(usuarioAuditoria);
-    if (!tieneRepaso && repaso.length < 1) {
+    const tieneRepaso = await this.feedbackRepositorio.repasoUsuario(usuarioAuditoria);
+    console.log('<<<<<<<', tieneRepaso);
+    console.log('>>>>>>>', repaso);
+
+    if ((!tieneRepaso || tieneRepaso.length < 1) && repaso.length < 1) {
       this.siguienteNivel(usuarioAuditoria);
     } else {
       this.aumentarIntentoLeccion(usuarioAuditoria)
