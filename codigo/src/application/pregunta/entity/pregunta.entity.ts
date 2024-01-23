@@ -32,10 +32,19 @@ export class Pregunta extends AuditoriaEntity {
   @Column({
     length: 1000,
     type: 'varchar',
-    unique: true,
+    unique: false,
     comment: 'Texto de pregunta',
   })
   texto: string
+
+  @Column({
+    length: 1000,
+    type: 'varchar',
+    unique: false,
+    default: '',
+    comment: 'Link apoyo de pregunta',
+  })
+  apoyo: string
 
   @Column({
     name: 'id_leccion',

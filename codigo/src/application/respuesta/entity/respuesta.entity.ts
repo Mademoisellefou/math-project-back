@@ -36,6 +36,15 @@ export class Respuesta extends AuditoriaEntity {
   texto: string
 
   @Column({
+    length: 2000,
+    type: 'varchar',
+    unique: false,
+    default: '',
+    comment: 'Explicacion de respuesta',
+  })
+  explicacion: string
+
+  @Column({
     name: 'es_correcta',
     type: 'boolean',
     default: false,

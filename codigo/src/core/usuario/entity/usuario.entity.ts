@@ -18,6 +18,7 @@ import { Status } from '../../../common/constants'
 import { Nota } from 'src/application/nota/entity'
 import { Leccion } from 'src/application/leccion/entity'
 import { Feedback } from 'src/application/feedback/entity'
+import { Mensaje } from 'src/application/mensaje/entity'
 
 dotenv.config()
 
@@ -56,6 +57,9 @@ export class Usuario extends AuditoriaEntity {
 
   @OneToMany(() => Nota, (nota) => nota.usuario)
   notas: Nota[]
+
+  @OneToMany(() => Mensaje, (mensaje) => mensaje.usuario)
+  mensajes: Mensaje[]
 
   @Column({
     name: 'id_leccion',

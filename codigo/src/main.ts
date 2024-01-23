@@ -104,7 +104,7 @@ function createSwagger(app: INestApplication) {
     .setTitle(SWAGGER_API_NAME)
     .setDescription(SWAGGER_API_DESCRIPTION)
     .setVersion(SWAGGER_API_CURRENT_VERSION)
-    .addServer(`http://${process.env.HOSTNAME}:${process.env.PORT}/api/`)
+    .addServer(`http://${process.env.BACKEND_HOSTNAME}:${process.env.PORT}/api/`)
     .addBearerAuth()
     .build()
 

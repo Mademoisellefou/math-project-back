@@ -3,14 +3,13 @@ import { ApiProperty } from '@nestjs/swagger'
 
 export class CrearPreguntaDto {
 
-  @ApiProperty({ example: 'Cuanto es 20x20?' })
-  @IsNotEmpty()
+  @ApiProperty({ example: 'Mi pregunta es ' })
   texto: string
 
   @ApiProperty({ example: '1' })
   @IsNotEmpty()
   idLeccion: string
-
+  
   @ApiProperty({ example: 'ACTIVO' })
   @IsOptional()
   estado?: string

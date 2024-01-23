@@ -5,6 +5,7 @@ import { LeccionModule } from './leccion/leccion.module'
 import { PreguntaModule } from './pregunta/pregunta.module'
 import { RespuestaModule } from './respuesta/respuesta.module'
 import { FeedbackModule } from './feedback/feedback.module'
+import { MensajeModule } from './mensaje/mensaje.module'
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { FeedbackModule } from './feedback/feedback.module'
     PreguntaModule,
     RespuestaModule,
     FeedbackModule,
+    MensajeModule
   ],
 })
 export class ApplicationModule {}
