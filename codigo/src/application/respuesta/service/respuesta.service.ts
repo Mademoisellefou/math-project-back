@@ -55,10 +55,6 @@ export class RespuestaService extends BaseService {
         },
         usuarioAuditoria
       )
-      const notaDto = new CrearNotaDto()
-      notaDto.intentos = 0
-      notaDto.idLeccion = leccion?.siguiente;
-      await this.notaRepositorio.crear(notaDto, usuarioAuditoria);
     } else {
       await this.usuarioRepositorio.actualizar(
         usuarioAuditoria,
@@ -111,7 +107,6 @@ export class RespuestaService extends BaseService {
       usuarioAuditoria,
       usuario.idLeccion
     )
-    
     const tieneRepaso = await this.feedbackRepositorio.repasoUsuario(usuarioAuditoria);
     if ((!tieneRepaso || tieneRepaso.length < 1) && repaso.length < 1) {
       this.siguienteNivel(usuarioAuditoria);

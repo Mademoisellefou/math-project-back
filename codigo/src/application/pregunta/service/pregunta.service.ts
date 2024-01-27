@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common'
 import { PreguntaRepository } from '../repository'
 import { CrearPreguntaDto } from '../dto'
-import { PaginacionQueryDto } from '../../../common/dto/paginacion-query.dto'
 import { Messages } from '../../../common/constants/response-messages'
 import { ActualizarPreguntaDto } from '../dto'
 import { PreguntaEstado } from '../constant'

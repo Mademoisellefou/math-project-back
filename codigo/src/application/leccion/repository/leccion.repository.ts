@@ -4,10 +4,11 @@ import { ActualizarLeccionDto, CrearLeccionDto } from '../dto'
 import { Leccion } from '../entity'
 import { PaginacionQueryDto } from '../../../common/dto/paginacion-query.dto'
 import { LeccionEstado } from '../constant'
+import { Status } from 'src/common/constants'
 
 @Injectable()
 export class LeccionRepository {
-  constructor(private dataSource: DataSource) {}
+  constructor(private dataSource: DataSource) { }
 
   async buscarPorId(id: string) {
     return await this.dataSource
@@ -15,6 +16,15 @@ export class LeccionRepository {
       .createQueryBuilder('leccion')
       .where({ id: id })
       .getOne()
+  }
+
+  async listaLecciones() {
+    const data = await this.dataSource
+      .getRepository(Leccion)
+      .createQueryBuilder('leccion')
+      .where({ estado: Status.ACTIVE })
+      .getMany()
+    return data
   }
 
   async actualizar(

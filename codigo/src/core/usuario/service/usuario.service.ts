@@ -23,7 +23,6 @@ import { AuthorizationService } from '../../authorization/controller/authorizati
 import { PersonaDto } from '../dto/persona.dto'
 import { UsuarioRolRepository } from '../../authorization/repository/usuario-rol.repository'
 import { ActualizarUsuarioRolDto } from '../dto/actualizar-usuario-rol.dto'
-import { SegipService } from '../../external-services/iop/segip/segip.service'
 import { ConfigService } from '@nestjs/config'
 import { TemplateEmailService } from '../../../common/templates/templates-email.service'
 import { FiltrosUsuarioDto } from '../dto/filtros-usuario.dto'
@@ -36,6 +35,7 @@ import { PersonaRepository } from '../repository/persona.repository'
 import { FeedbackRepository } from 'src/application/feedback/repository'
 import { RolEnum } from 'src/core/authorization/rol.enum'
 import { NotaRepository } from 'src/application/nota/repository'
+import { LeccionRepository } from 'src/application/leccion/repository'
 
 @Injectable()
 export class UsuarioService extends BaseService {
@@ -50,11 +50,12 @@ export class UsuarioService extends BaseService {
     private feedbackRepositorio: FeedbackRepository,
     @Inject(NotaRepository)
     private notaRepositorio: NotaRepository,
+    @Inject(LeccionRepository)
+    private leccionRepositorio: LeccionRepository,
     @Inject(PersonaRepository)
     private personaRepositorio: PersonaRepository,
     private readonly mensajeriaService: MensajeriaService,
     private readonly authorizationService: AuthorizationService,
-    private readonly segipServices: SegipService,
     private configService: ConfigService
   ) {
     super()
@@ -129,12 +130,13 @@ export class UsuarioService extends BaseService {
         usuarioAuditoria,
         transaction
       )
-
-
-      await this.notaRepositorio.crearUsuario({
-        intentos: 0,
-        idLeccion: LECCION.INICIAL,
-      }, usuario.id, transaction)
+      const lecciones = await this.leccionRepositorio.listaLecciones()
+      for (let index = 0; index < lecciones.length; index++) {
+        await this.notaRepositorio.crearUsuario({
+          intentos: 0,
+          idLeccion: lecciones[0].id,
+        }, usuario.id, transaction)
+      }
 
       return {
         finalizado: true,
@@ -465,13 +467,6 @@ export class UsuarioService extends BaseService {
       const { persona } = usuarioDto
 
       if (persona) {
-        //contrastación SEGIP
-
-        const contrastaSegip = await this.segipServices.contrastar(persona)
-        if (!contrastaSegip?.finalizado) {
-          throw new PreconditionFailedException(contrastaSegip?.mensaje)
-        }
-
         const personaResult = await this.personaRepositorio.buscarPersonaId(
           usuario.idPersona,
           transaction

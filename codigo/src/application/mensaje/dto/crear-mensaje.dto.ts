@@ -2,21 +2,9 @@ import { IsNotEmpty, IsOptional } from '../../../common/validation'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class CrearMensajeDto {
-  @ApiProperty({ example: 'TD-CI' })
+  @ApiProperty({ example: 'esta bien esta el ejercicio??' })
   @IsNotEmpty()
-  codigo: string
-
-  @ApiProperty({ example: 'Cédula de identidad' })
-  @IsNotEmpty()
-  nombre: string
-
-  @ApiProperty({ example: 'CD' })
-  @IsNotEmpty()
-  grupo: string
-
-  @ApiProperty({ example: 'Cédula de identidad' })
-  @IsNotEmpty()
-  descripcion: string
+  texto: string
 
   @ApiProperty({ example: 'ACTIVO' })
   @IsOptional()

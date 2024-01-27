@@ -26,17 +26,8 @@ import { RefreshTokens } from './entity/refreshTokens.entity'
 import { UsuarioRol } from '../authorization/entity/usuario-rol.entity'
 import { Rol } from '../authorization/entity/rol.entity'
 import { BaseClient } from 'openid-client'
-import { ClientOidcService } from './oidc.client'
 
-const OidcStrategyFactory = {
-  provide: 'OidcStrategy',
-  useFactory: async (autenticacionService: AuthenticationService) => {
-    const client: BaseClient | undefined = await ClientOidcService.getInstance()
-    if (client) return new OidcStrategy(autenticacionService, client)
-    else return undefined
-  },
-  inject: [AuthenticationService],
-}
+
 
 @Module({
   imports: [
@@ -67,7 +58,6 @@ const OidcStrategyFactory = {
     RefreshTokensService,
     LocalStrategy,
     JwtStrategy,
-    OidcStrategyFactory,
     SessionSerializer,
     RolRepository,
     PersonaRepository,
@@ -77,4 +67,4 @@ const OidcStrategyFactory = {
   ],
   exports: [AuthenticationService],
 })
-export class AuthenticationModule {}
+export class AuthenticationModule { }

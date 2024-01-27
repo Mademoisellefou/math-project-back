@@ -58,13 +58,11 @@ export class MensajeRepository {
   }
 
   async crear(mensajeDto: CrearMensajeDto, usuarioAuditoria: string) {
-    const { codigo, nombre, grupo, descripcion } = mensajeDto
-
+    const { texto  } = mensajeDto
     const mensaje = new Mensaje()
-    mensaje.idUsuario = codigo
-    mensaje.texto = nombre
+    mensaje.idUsuario = usuarioAuditoria
+    mensaje.texto = texto
     mensaje.usuarioCreacion = usuarioAuditoria
-
     return await this.dataSource.getRepository(Mensaje).save(mensaje)
   }
 }

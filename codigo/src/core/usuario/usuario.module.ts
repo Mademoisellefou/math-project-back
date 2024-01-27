@@ -16,6 +16,7 @@ import { UsuarioRol } from '../authorization/entity/usuario-rol.entity'
 import { Rol } from '../authorization/entity/rol.entity'
 import { FeedbackRepository } from 'src/application/feedback/repository'
 import { NotaRepository } from 'src/application/nota/repository'
+import { LeccionRepository } from 'src/application/leccion/repository'
 
 @Module({
   providers: [
@@ -25,6 +26,7 @@ import { NotaRepository } from 'src/application/nota/repository'
     UsuarioRolRepository,
     RolRepository,
     FeedbackRepository,
+    LeccionRepository,
     NotaRepository
   ],
   exports: [UsuarioService],

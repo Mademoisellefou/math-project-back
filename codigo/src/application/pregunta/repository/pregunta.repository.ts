@@ -76,6 +76,7 @@ export class PreguntaRepository {
       .select([
         'pregunta.id',
         'pregunta.texto',
+        'pregunta.apoyo',
         'pregunta.esImagen',
         'pregunta.idLeccion',
         'pregunta.estado',

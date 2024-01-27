@@ -13,12 +13,11 @@
 
 Para usar este proyecto como base de un nuevo proyecto, debe seguir los siguientes pasos:
 
-- Crear nuevo proyecto en [Gitlab](https://gitlab.agetic.gob.bo/projects/new) y clonarlo en local
+- Crear nuevo proyecto y clonarlo en local
 - Añadir este proyecto como otro origen, ejecutar dentro del nuevo proyecto:
 
 ```
-git remote add origin2 git@gitlab.agetic.gob.bo:agetic/agetic/proyectos-base/agetic-nestjs-base-backend.git
-```
+
 
 - Descargar los commits desde el 2.º origen, ejecutar
 
@@ -101,16 +100,7 @@ Documentación relacionada con el proyecto:
 
 ## Colaboradores
 
-- almamani@agetic.gob.bo
-- jpoma@agetic.gob.bo
-- rquispe@agetic.gob.bo
-- wilmer.quispe@agetic.gob.bo
-- ivillarreal@agetic.gob.bo
-
 ## Licencia
 
 [LGP-Bolivia](LICENSE).
 
-## Información de contacto
-
-- contacto@agetic.gob.bo

@@ -95,6 +95,9 @@ export class insertCasbinRules1617712857472 implements MigrationInterface {
       },
 
       //NUEVAS RUTAS
+      '/api/mensajes': {
+        [RolEnum.TODOS]: 'GET|POST',
+      },
       '/api/respuestas': {
         [RolEnum.TODOS]: 'GET|POST',
       },

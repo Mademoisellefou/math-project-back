@@ -52,16 +52,16 @@ export class usuario1611171041790 implements MigrationInterface {
     })
 
     //
-    const leccion = await queryRunner.manager.save(nuevaLecciones)
+    await queryRunner.manager.save(nuevaLecciones)
     const items = [
       {
         //id: 1,
-        usuario: 'ADMINISTRADOR',
-        correoElectonico: 'agepic-9270815@yopmail.com',
+        usuario: 'administrador',
+        correoElectonico: 'eml@gmail.com',
         persona: {
-          nombres: 'YASMIN',
-          primerApellido: 'RODRIGUEZ',
-          segundoApellido: 'ROMERO',
+          nombres: 'yasmin',
+          primerApellido: 'rodrige<',
+          segundoApellido: 'romero',
           tipoDocumento: TipoDocumento.CI,
           nroDocumento: '9270815',
           fechaNacimiento: '2001-12-16',
@@ -70,8 +70,8 @@ export class usuario1611171041790 implements MigrationInterface {
       },
       {
         //id: 2,
-        usuario: 'ADMINISTRADOR-TECNICO',
-        correoElectonico: 'agepic-1765251@yopmail.com',
+        usuario: 'administrador-tecnico',
+        correoElectonico: 'eml2@gmail.com',
         persona: {
           nombres: 'ALBANO',
           primerApellido: 'ROJAS',
@@ -84,12 +84,12 @@ export class usuario1611171041790 implements MigrationInterface {
       },
       {
         //id: 3,
-        usuario: 'TECNICO',
-        correoElectonico: 'agepic-6114767@yopmail.com',
+        usuario: 'tecnico',
+        correoElectonico: 'em3@gmail.com',
         persona: {
-          nombres: 'JESUS',
-          primerApellido: 'ROJAS',
-          segundoApellido: 'ZABALA',
+          nombres: 'jesus',
+          primerApellido: 'rojas',
+          segundoApellido: 'zabal',
           tipoDocumento: TipoDocumento.CI,
           nroDocumento: '6114767',
           fechaNacimiento: '2009-02-28',

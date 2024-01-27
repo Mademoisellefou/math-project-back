@@ -1,10 +1,10 @@
 {
   "name": "quiz-base-backend",
   "version": "1.9.2",
-  "description": "Backend base con Nest.js, TypeORM y TypeScript",
-  "author": "agetic@agetic.gob.bo",
+  "description": "",
+  "author": "",
   "private": true,
-  "license": "LPG-Bolivia",
+  "license": "MIT",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
