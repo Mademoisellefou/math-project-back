@@ -142,7 +142,7 @@ export class SegipService extends BaseService {
   ): { finalizado: boolean; mensaje: string } {
     return {
       finalizado: exito,
-      mensaje: `Servicio Segip: ${mensaje}`,
+      mensaje: `Servicio: ${mensaje}`,
     }
   }
 }

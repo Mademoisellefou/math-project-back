@@ -75,9 +75,12 @@ export class FeedbackService extends BaseService {
 
     const feedbacks = await this.feedbackRepositorio.repaso(usuario.idLeccion, usuario.id)
 
-    const idsPreguntas = feedbacks.map(feedback => feedback.idPregunta);
-    const preguntas = await this.preguntaRepositorio.preguntaRepaso(idsPreguntas);
     const feedbacksRepaso: RepasoFeedbackDto = new RepasoFeedbackDto()
+    const idsPreguntas = feedbacks.map(feedback => feedback.idPregunta);
+    if (idsPreguntas.length <= 0) {
+      return feedbacks;
+    }
+    const preguntas = await this.preguntaRepositorio.preguntaRepaso(idsPreguntas);
     const resultado = preguntas.map(item => {
       const respuesta = item.respuestas[0].texto;
       const texto = item.texto
