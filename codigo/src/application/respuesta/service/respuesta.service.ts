@@ -83,13 +83,7 @@ export class RespuestaService extends BaseService {
   async respuestasLeccion(
     respuestaDto: ObtenerLeccionDto,
     usuarioAuditoria: string
-  ) {
-    // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    // console.log(respuestaDto.respuestas);
-
-    // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.R');
-    
-    
+  ) {    
     if (!usuarioAuditoria) {
       throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
     }
