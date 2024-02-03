@@ -76,7 +76,7 @@ export class RespuestaService extends BaseService {
     }
     const nota = await this.notaRepositorio.buscarPorUsuarioLeccion(usuarioRespuestas.id, leccion.id);
     if (!nota) {
-      throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
+      throw new NotFoundException('No existe nota')
     }
     await this.notaRepositorio.actualizar(nota.id, { intentos: 1 + nota.intentos }, usuarioAuditoria);
   }
@@ -84,6 +84,12 @@ export class RespuestaService extends BaseService {
     respuestaDto: ObtenerLeccionDto,
     usuarioAuditoria: string
   ) {
+    // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    // console.log(respuestaDto.respuestas);
+
+    // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.R');
+    
+    
     if (!usuarioAuditoria) {
       throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
     }
@@ -109,8 +115,10 @@ export class RespuestaService extends BaseService {
     )
     const tieneRepaso = await this.feedbackRepositorio.repasoUsuario(usuarioAuditoria);
     if ((!tieneRepaso || tieneRepaso.length < 1) && repaso.length < 1) {
+      console.log('>????????????????/AVANCE');
       this.siguienteNivel(usuarioAuditoria);
     } else {
+      console.log('?????????????????/INTENTO');
       this.aumentarIntentoLeccion(usuarioAuditoria)
     }
     return repaso

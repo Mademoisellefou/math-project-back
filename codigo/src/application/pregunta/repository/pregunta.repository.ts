@@ -67,8 +67,19 @@ export class PreguntaRepository {
   getRndInteger = (min: number, max: number) => {
     return Math.floor(Math.random() * (max - min)) + min;
   }
+  async contar(idLeccion: string) {
+    return await this.dataSource
+      .getRepository(Pregunta)
+      .createQueryBuilder('pregunta')
+      .select([
+        'pregunta.id',
+      ])
+      .where({ idLeccion: idLeccion }).getMany();
+  }
   async listar(idLeccion: string, limite: number = 5) {
-    const saltar = this.getRndInteger(1, 14);
+    const total = (await this.contar(idLeccion)).length
+    const saltar = this.getRndInteger(1, total - (limite - 1));
+
     const query = this.dataSource
       .getRepository(Pregunta)
       .createQueryBuilder('pregunta')
@@ -88,6 +99,8 @@ export class PreguntaRepository {
       .andWhere({ estado: Status.ACTIVE })
       .take(limite)
       .skip(saltar)
+    // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    console.log(await query.getMany());
     return await query.getMany()
   }
 

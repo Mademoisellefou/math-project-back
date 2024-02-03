@@ -75,7 +75,7 @@ export class FeedbackService extends BaseService {
 
     const feedbacks = await this.feedbackRepositorio.repaso(usuario.idLeccion, usuario.id)
 
-    const feedbacksRepaso: RepasoFeedbackDto = new RepasoFeedbackDto()
+    // const feedbacksRepaso: RepasoFeedbackDto = new RepasoFeedbackDto()
     const idsPreguntas = feedbacks.map(feedback => feedback.idPregunta);
     if (idsPreguntas.length <= 0) {
       return feedbacks;
@@ -91,8 +91,7 @@ export class FeedbackService extends BaseService {
         respuesta
       }
     })
-    feedbacksRepaso.repaso = resultado
-    return feedbacksRepaso
+    return resultado
   }
   async activar(idFeedback: string, usuarioAuditoria: string) {
     const feedback = await this.feedbackRepositorio.buscarPorId(idFeedback)

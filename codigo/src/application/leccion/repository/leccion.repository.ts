@@ -22,6 +22,9 @@ export class LeccionRepository {
     const data = await this.dataSource
       .getRepository(Leccion)
       .createQueryBuilder('leccion')
+      .select([
+        'leccion.id',
+      ])
       .where({ estado: Status.ACTIVE })
       .getMany()
     return data

@@ -130,11 +130,12 @@ export class UsuarioService extends BaseService {
         usuarioAuditoria,
         transaction
       )
+
       const lecciones = await this.leccionRepositorio.listaLecciones()
       for (let index = 0; index < lecciones.length; index++) {
         await this.notaRepositorio.crearUsuario({
           intentos: 0,
-          idLeccion: lecciones[0].id,
+          idLeccion: lecciones[index].id,
         }, usuario.id, transaction)
       }
 
