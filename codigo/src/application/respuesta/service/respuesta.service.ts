@@ -109,10 +109,10 @@ export class RespuestaService extends BaseService {
     )
     const tieneRepaso = await this.feedbackRepositorio.repasoUsuario(usuarioAuditoria);
     if ((!tieneRepaso || tieneRepaso.length < 1) && repaso.length < 1) {
-      console.log('>????????????????/AVANCE');
+      console.log('AVANCE');
       this.siguienteNivel(usuarioAuditoria);
     } else {
-      console.log('?????????????????/INTENTO');
+      console.log('INTENTO');
       this.aumentarIntentoLeccion(usuarioAuditoria)
     }
     return repaso
