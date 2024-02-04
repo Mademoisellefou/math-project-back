@@ -19,22 +19,22 @@ export class usuario1611171041790 implements MigrationInterface {
       [{
         codigo: 'TD-CI-1',
         idUsuario: '1',
-        titulo: 'Algoritmos',
-        descripcion: 'Algoritmos',
+        titulo: 'Reparto proporcional',
+        descripcion: 'Reparto proporcional',
         siguiente: '2'
       },
       {
         codigo: 'TD-CI-2',
         idUsuario: '1',
-        titulo: 'Algoritmos 2',
-        descripcion: 'Algoritmos 2',
+        titulo: 'Regla de compañía',
+        descripcion: 'Regla de compañía',
         siguiente: '3'
       },
       {
         codigo: 'TD-CI-3',
         idUsuario: '1',
-        titulo: 'Algoritmos 3',
-        descripcion: 'Algoritmos 3',
+        titulo: 'Porcentajes',
+        descripcion: 'Porcentajes',
         siguiente: 'F'
       }
       ]
