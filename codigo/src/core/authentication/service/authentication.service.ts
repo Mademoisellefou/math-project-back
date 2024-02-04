@@ -11,7 +11,6 @@ import {
 } from '../../../common/constants'
 import { Messages } from '../../../common/constants/response-messages'
 import dayjs from 'dayjs'
-import { MensajeriaService } from '../../external-services/mensajeria/mensajeria.service'
 import { PersonaDto } from '../../usuario/dto/persona.dto'
 import { ConfigService } from '@nestjs/config'
 import { PersonaService } from '../../usuario/service/persona.service'
@@ -27,7 +26,6 @@ export class AuthenticationService extends BaseService {
     private readonly usuarioService: UsuarioService,
     private readonly jwtService: JwtService,
     private readonly refreshTokensService: RefreshTokensService,
-    private readonly mensajeriaService: MensajeriaService,
     @Inject(ConfigService) private readonly configService: ConfigService
   ) {
     super()

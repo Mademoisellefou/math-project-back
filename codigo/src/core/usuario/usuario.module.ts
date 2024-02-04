@@ -2,10 +2,8 @@ import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { UsuarioService } from './service/usuario.service'
 import { UsuarioController } from './controller/usuario.controller'
-import { MensajeriaModule } from '../external-services/mensajeria/mensajeria.module'
 import { ConfigModule } from '@nestjs/config'
 import { AuthorizationModule } from '../authorization/authorization.module'
-import { IopModule } from '../external-services/iop/iop.module'
 import { RolRepository } from '../authorization/repository/rol.repository'
 import { UsuarioRepository } from './repository/usuario.repository'
 import { PersonaRepository } from './repository/persona.repository'
@@ -32,8 +30,6 @@ import { LeccionRepository } from 'src/application/leccion/repository'
   exports: [UsuarioService],
   imports: [
     TypeOrmModule.forFeature([Usuario, Persona, UsuarioRol, Rol]),
-    MensajeriaModule,
-    IopModule,
     ConfigModule,
     AuthorizationModule,
   ],

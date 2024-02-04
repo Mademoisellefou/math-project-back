@@ -13,7 +13,7 @@ import { Nota } from 'src/application/nota/entity'
 
 export class usuario1611171041790 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    const DEFAULT_PASS = '123'
+    const DEFAULT_PASS = 'mscti2024'
     const pass = await TextService.encrypt(DEFAULT_PASS)
     const itemsLecciones =
       [{

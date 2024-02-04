@@ -83,7 +83,7 @@ export class RespuestaService extends BaseService {
   async respuestasLeccion(
     respuestaDto: ObtenerLeccionDto,
     usuarioAuditoria: string
-  ) {    
+  ) {
     if (!usuarioAuditoria) {
       throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
     }

@@ -18,4 +18,4 @@ import { MensajeModule } from './mensaje/mensaje.module'
     MensajeModule
   ],
 })
-export class ApplicationModule {}
+export class ApplicationModule { }

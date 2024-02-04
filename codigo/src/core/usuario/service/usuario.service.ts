@@ -17,7 +17,6 @@ import {
 } from '../../../common/constants'
 import { CrearUsuarioDto } from '../dto/crear-usuario.dto'
 import { TextService } from '../../../common/lib/text.service'
-import { MensajeriaService } from '../../external-services/mensajeria/mensajeria.service'
 import { Messages } from '../../../common/constants/response-messages'
 import { AuthorizationService } from '../../authorization/controller/authorization.service'
 import { PersonaDto } from '../dto/persona.dto'
@@ -54,7 +53,6 @@ export class UsuarioService extends BaseService {
     private leccionRepositorio: LeccionRepository,
     @Inject(PersonaRepository)
     private personaRepositorio: PersonaRepository,
-    private readonly mensajeriaService: MensajeriaService,
     private readonly authorizationService: AuthorizationService,
     private configService: ConfigService
   ) {
@@ -318,13 +316,7 @@ export class UsuarioService extends BaseService {
       usuario,
       contrasena
     )
-
-    const result = await this.mensajeriaService.sendEmail(
-      datosCorreo.correo,
-      datosCorreo.asunto,
-      template
-    )
-    return result.finalizado
+    return []
   }
 
   verificarPermisos(usuarioAuditoria: string, id: string) {

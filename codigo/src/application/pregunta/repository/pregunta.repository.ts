@@ -99,6 +99,8 @@ export class PreguntaRepository {
       .andWhere({ estado: Status.ACTIVE })
       .take(limite)
       .skip(saltar)
+    console.log('Preguntas=>');
+    console.log(await query.getMany());
     return await query.getMany()
   }
 

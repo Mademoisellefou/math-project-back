@@ -5,13 +5,10 @@ import { PersonaRepository } from '../repository/persona.repository'
 import { CrearUsuarioDto } from '../dto/crear-usuario.dto'
 import { UsuarioRepository } from '../repository/usuario.repository'
 import { UsuarioService } from './usuario.service'
-import { MensajeriaService } from '../../external-services/mensajeria/mensajeria.service'
-import { MensajeriaModule } from '../../external-services/mensajeria/mensajeria.module'
 import { NotFoundException, PreconditionFailedException } from '@nestjs/common'
 import { AuthorizationService } from '../../authorization/controller/authorization.service'
 import { Messages } from '../../../common/constants/response-messages'
 import { UsuarioRolRepository } from '../../authorization/repository/usuario-rol.repository'
-import { SegipService } from '../../external-services/iop/segip/segip.service'
 import { ConfigService } from '@nestjs/config'
 import { FiltrosUsuarioDto } from '../dto/filtros-usuario.dto'
 import { ActualizarUsuarioRolDto } from '../dto/actualizar-usuario-rol.dto'
@@ -200,18 +197,6 @@ describe('UsuarioService', () => {
           },
         },
         {
-          provide: MensajeriaService,
-          useValue: {
-            sendEmail: jest.fn(() => ({ finalizado: true })),
-          },
-        },
-        {
-          provide: SegipService,
-          useValue: {
-            contrastar: jest.fn(() => ({ finalizado: true })),
-          },
-        },
-        {
           provide: PersonaRepository,
           useValue: {},
         },
@@ -226,7 +211,6 @@ describe('UsuarioService', () => {
           useValue: {},
         },
       ],
-      imports: [MensajeriaModule],
     }).compile()
 
     service = module.get<UsuarioService>(UsuarioService)

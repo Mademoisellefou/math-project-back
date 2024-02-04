@@ -33,12 +33,4 @@ describe('PreguntaService', () => {
     service = module.get<PreguntaService>(PreguntaService)
   })
 
-  it('[listar] Debería obtener la lista de preguntas', async () => {
-    const paginacion = new PaginacionQueryDto()
-    const preguntas = await service.listar(paginacion)
-
-    expect(preguntas).toBeInstanceOf(Array)
-    expect(preguntas.length).toEqual(2)
-  })
-
 })

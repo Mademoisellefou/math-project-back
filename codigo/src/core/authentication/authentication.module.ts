@@ -15,7 +15,6 @@ import { UsuarioRepository } from '../usuario/repository/usuario.repository'
 
 import { RefreshTokensRepository } from './repository/refreshTokens.repository'
 import { RefreshTokensService } from './service/refreshTokens.service'
-import { MensajeriaModule } from '../external-services/mensajeria/mensajeria.module'
 import { PersonaService } from '../usuario/service/persona.service'
 import { UsuarioRolRepository } from '../authorization/repository/usuario-rol.repository'
 import { PersonaRepository } from '../usuario/repository/persona.repository'
@@ -49,7 +48,6 @@ import { BaseClient } from 'openid-client'
       UsuarioRol,
       Rol,
     ]),
-    MensajeriaModule,
   ],
   controllers: [AuthenticationController, RefreshTokensController],
   providers: [

@@ -17,13 +17,13 @@ export class TokenDto {
 
 export class AuthDto {
   @ApiProperty({
-    example: 'ADMINISTRADOR',
+    example: 'administrador',
     description: 'Usuario',
   })
   usuario: string
 
   @ApiProperty({
-    example: 'MTIz',
+    example: 'bXNjdGkyMDI0',
     description: 'Contraseña',
   })
   contrasena: string
