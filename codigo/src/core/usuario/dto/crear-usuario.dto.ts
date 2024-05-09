@@ -16,13 +16,13 @@ export class CrearUsuarioDto {
   @ApiProperty({ example: 'username' })
   @IsNotEmpty()
   usuario: string
-  @ApiProperty({ example: '1234saad._' })
+  @ApiProperty({ example: '1234sad._' })
   @IsNotEmpty()
   contrasena: string
-  @ApiProperty()
-  @ValidateNested()
-  @Type(() => PersonaDto)
-  persona: PersonaDto
+  // @ApiProperty()
+  // @ValidateNested()
+  // @Type(() => PersonaDto)
+  // persona: PersonaDto
 
   @IsNotEmpty()
   @ApiProperty({ example: ['1'] })

@@ -45,9 +45,11 @@ const bootstrap = async () => {
 
   const configService = app.get(ConfigService)
 
-  if (configService.get('NODE_ENV') !== 'production') {
-    createSwagger(app)
-  }
+ if (configService.get('NODE_ENV') !== 'production') {
+   createSwagger(app)
+ }
+
+// createSwagger(app)
 
   await SessionAppDataSource.initialize()
 
@@ -103,7 +105,8 @@ function createSwagger(app: INestApplication) {
     .setTitle(SWAGGER_API_NAME)
     .setDescription(SWAGGER_API_DESCRIPTION)
     .setVersion(SWAGGER_API_CURRENT_VERSION)
-    .addServer(`http://${process.env.BACKEND_HOSTNAME}:${process.env.PORT}/api/`)
+    // .addServer(`http://${process.env.BACKEND_HOSTNAME}:${process.env.PORT}/api/`)
+    .addServer(`https://${process.env.BACKEND_HOSTNAME}/api/`)
     .addBearerAuth()
     .build()
 

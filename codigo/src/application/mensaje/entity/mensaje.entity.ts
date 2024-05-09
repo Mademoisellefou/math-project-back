@@ -25,15 +25,6 @@ export class Mensaje extends AuditoriaEntity {
   })
   id: string
 
-  @Column({
-    name: 'id_usuario',
-    type: 'varchar',
-    comment: 'Clave foránea de usuario',
-  })
-  idUsuario: string
-  @ManyToOne(() => Usuario, (usuario) => usuario.feedbacks, { nullable: false })
-  @JoinColumn({ name: 'id_usuario', referencedColumnName: 'id' })
-  usuario: Usuario
 
   @Column({ length: 355, type: 'varchar', comment: 'Descripción del texto' })
   texto: string

@@ -7,36 +7,63 @@ import {
   USUARIO_SISTEMA,
 } from '../../src/common/constants'
 import dayjs from 'dayjs'
-import { Persona } from '../../src/core/usuario/entity/persona.entity'
 import { Leccion } from 'src/application/leccion/entity'
-import { Nota } from 'src/application/nota/entity'
 
 export class usuario1611171041790 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     const DEFAULT_PASS = 'mscti2024'
     const pass = await TextService.encrypt(DEFAULT_PASS)
     const itemsLecciones =
-      [{
-        codigo: 'TD-CI-1',
-        idUsuario: '1',
-        titulo: 'Reparto proporcional',
-        descripcion: 'Reparto proporcional',
-        siguiente: '2'
-      },
-      {
-        codigo: 'TD-CI-2',
-        idUsuario: '1',
-        titulo: 'Regla de compañía',
-        descripcion: 'Regla de compañía',
-        siguiente: '3'
-      },
-      {
-        codigo: 'TD-CI-3',
-        idUsuario: '1',
-        titulo: 'Porcentajes',
-        descripcion: 'Porcentajes',
-        siguiente: 'F'
-      }
+      [
+        {
+          codigo: 'TD-CI-1',
+          idUsuario: '1',
+          titulo: "Porcentaje",
+          descripcion: 'Porcentaje',
+          siguiente: '2'
+        },
+        {
+          codigo: 'TD-CI-2',
+          idUsuario: '1',
+          titulo: "Tipos de impuestos",
+          descripcion: 'Tipos de impuestos',
+          siguiente: '3'
+        },
+        {
+          codigo: 'TD-CI-3',
+          idUsuario: '1',
+          titulo: "Tributaria concepto básicos",
+          descripcion: 'Tributaria concepto básicos',
+          siguiente: '4'
+        },
+        {
+          codigo: 'TD-CI-4',
+          idUsuario: '1',
+          titulo: "Capital Final I",
+          descripcion: 'El capital final en una operación de interés simple ',
+          siguiente: '5'
+        },
+        {
+          codigo: 'TD-CI-5',
+          idUsuario: '1',
+          titulo: "Capital Final II",
+          descripcion: 'El interés que genera un préstamo o inversión tambien aprenderas de la conversion',
+          siguiente: '6'
+        },
+        {
+          codigo: 'TD-CI-6',
+          idUsuario: '1',
+          titulo: "Intereses Generados I",
+          descripcion: 'Tiempo tiene que estar invertido un dinero',
+          siguiente: '7'
+        },
+        {
+          codigo: 'TD-CI-7',
+          idUsuario: '1',
+          titulo: "Intereses Generados II",
+          descripcion: 'Tiempo tiene que estar invertido un dinero tambien aprenderas de la conversion',
+          siguiente: 'F'
+        }
       ]
 
     const nuevaLecciones = itemsLecciones.map((item) => {
@@ -54,85 +81,62 @@ export class usuario1611171041790 implements MigrationInterface {
     //
     await queryRunner.manager.save(nuevaLecciones)
     const items = [
-      {
-        //id: 1,
-        usuario: 'administrador',
-        correoElectonico: 'eml@gmail.com',
-        persona: {
-          nombres: 'yasmin',
-          primerApellido: 'rodrige<',
-          segundoApellido: 'romero',
-          tipoDocumento: TipoDocumento.CI,
-          nroDocumento: '9270815',
-          fechaNacimiento: '2001-12-16',
-          genero: Genero.FEMENINO,
-        },
-      },
-      {
-        //id: 2,
-        usuario: 'administrador-tecnico',
-        correoElectonico: 'eml2@gmail.com',
-        persona: {
-          nombres: 'ALBANO',
-          primerApellido: 'ROJAS',
-          segundoApellido: 'AGUADA',
-          tipoDocumento: TipoDocumento.CI,
-          nroDocumento: '1765251',
-          fechaNacimiento: '1967-05-28',
-          genero: Genero.MASCULINO,
-        },
-      },
-      {
-        //id: 3,
-        usuario: 'tecnico',
-        correoElectonico: 'em3@gmail.com',
-        persona: {
-          nombres: 'jesus',
-          primerApellido: 'rojas',
-          segundoApellido: 'zabal',
-          tipoDocumento: TipoDocumento.CI,
-          nroDocumento: '6114767',
-          fechaNacimiento: '2009-02-28',
-          genero: Genero.MASCULINO,
-        },
-      },
+      { usuario: 'profesoraEMA'},
+      { usuario: 'estudiantedemo'},
+      { usuario: "reymormcc" },
+      { usuario: "jhamilecs" },
+      { usuario: "adairdcn" },
+      { usuario: "evelyncc" },
+      { usuario: "nardydcl" },
+      { usuario: "johnbcm" },
+      { usuario: "belindahm" },
+      { usuario: "josuerht" },
+
+      { usuario: "cristhianhl" },
+      { usuario: "yairjlc" },
+      { usuario: "jhamiletalq" },
+      { usuario: "jhoselinmg" },
+      { usuario: "danielami" },
+      { usuario: "marvingmk" },
+      { usuario: "aracelyml" },
+      { usuario: "ademarmp" },
+      { usuario: "vanessaqh" },
+      { usuario: "judtihqc" },
+
+      { usuario: "franzaqv" },
+      { usuario: "anabelqq" },
+      { usuario: "luismra" },
+      { usuario: "vaniaasn" },
+      { usuario: "daysitm" },
+      { usuario: "anaetq" },
+      { usuario: "cristhianam" },
+      { usuario: "yolisacm" },
+      { usuario: "eddydcm" },
+      { usuario: "sarahícq" },//30
+      { usuario: "marcosccc" },
+      { usuario: "robinhocc" },
+      { usuario: "ronnyrmb" },
+      { usuario: "yoselinmv" },
+      { usuario: "yhorginaqu" },
+      { usuario: "jhonnyqm" },
+      { usuario: "edzoneqm" },
+      { usuario: "warahqc" },
+      { usuario: "wendysc" },
+      { usuario: "marylvq" },
+      { usuario: "alexandralzc" },
     ]
 
     for (const item of items) {
-      const persona = new Persona({
-        fechaNacimiento: dayjs(
-          item.persona.fechaNacimiento,
-          'YYYY-MM-DD'
-        ).toDate(),
-        genero: item.persona.genero,
-        nombres: item.persona.nombres,
-        nroDocumento: item.persona.nroDocumento,
-        primerApellido: item.persona.primerApellido,
-        segundoApellido: item.persona.segundoApellido,
-        tipoDocumento: item.persona.tipoDocumento,
-        estado: 'ACTIVO',
-        transaccion: 'SEEDS',
-        usuarioCreacion: USUARIO_SISTEMA,
-      })
-      const personaResult = await queryRunner.manager.save(persona)
       const usuario = new Usuario({
         contrasena: pass,
         intentos: 0,
         idLeccion: '1',
         usuario: item.usuario,
-        idPersona: personaResult.id,
         estado: 'ACTIVO',
         transaccion: 'SEEDS',
         usuarioCreacion: USUARIO_SISTEMA,
       })
-      const usuarioResult = await queryRunner.manager.save(usuario)
-
-      const nota = new Nota({
-        intentos: 0,
-        idUsuario: '1',
-        idLeccion: '1',
-      })
-
+      await queryRunner.manager.save(usuario)
     }
   }
 

@@ -58,9 +58,6 @@ export class Usuario extends AuditoriaEntity {
   @OneToMany(() => Nota, (nota) => nota.usuario)
   notas: Nota[]
 
-  @OneToMany(() => Mensaje, (mensaje) => mensaje.usuario)
-  mensajes: Mensaje[]
-
   @Column({
     name: 'id_leccion',
     type: 'varchar',
@@ -81,41 +78,6 @@ export class Usuario extends AuditoriaEntity {
   })
   intentos: number
 
-  @Index()
-  @Column({
-    name: 'codigo_activacion',
-    length: 100,
-    nullable: true,
-    type: 'varchar',
-    comment: 'código de activación de la cuenta de usuario',
-  })
-  codigoActivacion?: string | null
-
-  @Column({
-    name: 'fecha_bloqueo',
-    type: 'timestamp without time zone',
-    nullable: true,
-    comment: 'fecha de bloqueo de la cuenta de usuario',
-  })
-  fechaBloqueo?: Date | null
-
-  @Column({
-    name: 'id_persona',
-    type: 'bigint',
-    nullable: false,
-    comment: 'clave foránea que referencia la tabla de Personas',
-  })
-  idPersona: string
-
-  @ManyToOne(() => Persona, (persona) => persona.usuarios, {
-    nullable: false,
-  })
-  @JoinColumn({
-    name: 'id_persona',
-    referencedColumnName: 'id',
-  })
-  persona: Persona
-
   @OneToMany(() => UsuarioRol, (usuarioRol) => usuarioRol.usuario)
   usuarioRol: UsuarioRol[]
 
@@ -127,4 +89,21 @@ export class Usuario extends AuditoriaEntity {
   insertarEstado() {
     this.estado = this.estado || UsuarioEstado.ACTIVE
   }
+
+  @Column({
+    name: 'prueba_realizada',
+    type: 'boolean',
+    default: false,
+    comment: 'Indica si el estudiante realizo linkerd test',
+  })
+  pruebaRealizada: boolean
+
+  @Column({
+    name: 'estado_test',
+    length: 30,
+    type: 'varchar',
+    default: 'SINREALIZAR',// 'BAJO', 'MEDIO', 'ALTO'
+    comment: 'Indica el estado del usuario despues del test',
+  })
+  estadoTest: string
 }

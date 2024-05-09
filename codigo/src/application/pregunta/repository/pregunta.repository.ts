@@ -79,7 +79,6 @@ export class PreguntaRepository {
   async listar(idLeccion: string, limite: number = 5) {
     const total = (await this.contar(idLeccion)).length
     const saltar = this.getRndInteger(1, total - (limite - 1));
-
     const query = this.dataSource
       .getRepository(Pregunta)
       .createQueryBuilder('pregunta')

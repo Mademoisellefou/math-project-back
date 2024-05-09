@@ -29,6 +29,12 @@ export class MensajeService extends BaseService {
     return await this.mensajeRepositorio.listar(paginacionQueryDto)
   }
 
+  async mensajeAleatorio() {
+    const mensajes = await this.mensajeRepositorio.mensajeAleatorio()
+    const mensajeIndex = Math.floor(Math.random() * mensajes[0].length);
+    return { mensaje: mensajes[0][mensajeIndex].texto }
+  }
+
   async actualizarDatos(
     id: string,
     mensajeDto: ActualizarMensajeDto,

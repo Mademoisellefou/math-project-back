@@ -30,37 +30,35 @@ export class MensajeRepository {
       .update(id, datosActualizar)
   }
 
-  async listar(paginacionQueryDto: PaginacionQueryDto) {
-    const { limite, saltar, filtro, orden, sentido } = paginacionQueryDto
+  async mensajeAleatorio( ) {
     const query = this.dataSource
       .getRepository(Mensaje)
       .createQueryBuilder('mensaje')
       .select([
         'mensaje.id',
-        'mensaje.idUsuario',
         'mensaje.texto',
-        'mensaje.estado',
+      ])
+    return await query.getManyAndCount()
+  }
+
+  async listar(paginacionQueryDto: PaginacionQueryDto) {
+    const { limite, saltar } = paginacionQueryDto
+    const query = this.dataSource
+      .getRepository(Mensaje)
+      .createQueryBuilder('mensaje')
+      .select([
+        'mensaje.id',
+        'mensaje.texto',
       ])
       .take(limite)
       .skip(saltar)
-
-    switch (orden) {
-      case 'texto':
-        query.addOrderBy('mensaje.nombre', sentido)
-        break
-      case 'estado':
-        query.addOrderBy('mensaje.estado', sentido)
-        break
-      default:
-        query.orderBy('mensaje.id', 'ASC')
-    }
+    query.orderBy('mensaje.id', 'ASC')
     return await query.getManyAndCount()
   }
 
   async crear(mensajeDto: CrearMensajeDto, usuarioAuditoria: string) {
     const { texto  } = mensajeDto
     const mensaje = new Mensaje()
-    mensaje.idUsuario = usuarioAuditoria
     mensaje.texto = texto
     mensaje.usuarioCreacion = usuarioAuditoria
     return await this.dataSource.getRepository(Mensaje).save(mensaje)

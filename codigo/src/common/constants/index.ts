@@ -12,6 +12,12 @@ export enum Status {
   COMPLETED = 'COMPLETED',
 }
 
+export enum RespuestasCorrectas {
+  NROMIN = '5',
+  NROMED = '10',
+  NROMAX = '15',
+}
+
 export enum Order {
   ASC = 'ASC',
   DESC = 'DESC',

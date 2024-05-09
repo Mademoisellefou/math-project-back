@@ -44,7 +44,13 @@ export class MensajeController extends BaseController {
     const result = await this.mensajeServicio.listar(paginacionQueryDto)
     return this.successListRows(result)
   }
-
+  
+  @ApiOperation({ summary: 'API para obtener un mensaje aleatorio' })
+  @Get('mensajeAleatorio')
+  async mensajeAleatorio() {
+    const result = await this.mensajeServicio.mensajeAleatorio()
+    return this.success(result)
+  }
   @ApiOperation({
     summary: 'API para obtener el listado de parámetros por grupo',
   })

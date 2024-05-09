@@ -5,39 +5,20 @@ import { Nota } from 'src/application/nota/entity'
 
 export class nota1611498173795 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    const items = [
-      {
-        codigo: 'TD-CI',
-        idUsuario: '1',
-        idLeccion: '1'
-      },
-      {
-        codigo: 'TD-CI',
-        idUsuario: '3',
-        idLeccion: '1'
-      },
-      {
-        codigo: 'TD-CI',
-        idUsuario: '3',
-        idLeccion: '2'
-      },
-      {
-        codigo: 'TD-CI',
-        idUsuario: '3',
-        idLeccion: '3'
-      },
-    ]
-    const notas = items.map((item) => {
-      return new Nota({
-        intentos: 0,
-        idUsuario: item.idUsuario,
-        idLeccion: item.idLeccion,
-        estado: 'ACTIVO',
-        transaccion: 'SEEDS',
-        usuarioCreacion: USUARIO_SISTEMA,
-      })
-    })
-    await queryRunner.manager.save(notas)
+    // let notas:any = []
+    // for (let index = 1; index < 42; index++) {   
+    //     notas.push(
+    //       new Nota({
+    //         intentos: 0,
+    //         idUsuario: index.toString(),
+    //         idLeccion: '1',
+    //         estado: 'ACTIVO',
+    //         transaccion: 'SEEDS',
+    //         usuarioCreacion: USUARIO_SISTEMA,
+    //       })
+    //     )
+    // }
+    // await queryRunner.manager.save(notas)
   }
 
   /* eslint-disable */

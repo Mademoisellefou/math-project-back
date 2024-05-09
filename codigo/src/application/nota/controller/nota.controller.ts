@@ -9,6 +9,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common'
+import Excel from 'exceljs';
+import * as Minio from 'minio';
 import { NotaService } from '../service'
 import { JwtAuthGuard } from '../../../core/authentication/guards/jwt-auth.guard'
 import { CasbinGuard } from '../../../core/authorization/guards/casbin.guard'
@@ -24,6 +26,7 @@ import {
   ApiProperty,
   ApiTags,
 } from '@nestjs/swagger'
+import { establecerMinio, getDateFielName } from '../constant';
 
 @ApiTags('Notas')
 @ApiBearerAuth()
@@ -39,6 +42,24 @@ export class NotaController extends BaseController {
   async listar(@Query() paginacionQueryDto: PaginacionQueryDto) {
     const result = await this.notaServicio.listar(paginacionQueryDto)
     return this.successListRows(result)
+  }
+  @ApiOperation({ summary: 'API para obtener el reporte de intentos por leccion' })
+  @Get('reportesIntentos')
+  async reportesIntentos(@Req() req: Request) {
+    const minioClient = establecerMinio(Minio);
+    const file = getDateFielName('reporte_intentos_estudiantes')
+    const fileName = `${process.env.MINIO_PATH}/${file}`;
+    await this.notaServicio.reportesEstudiantesIntentos(file, fileName, Excel, minioClient);
+    return this.successCreate({ reporte: file })
+  }
+  @ApiOperation({ summary: 'API para obtener el reporte de tiempos por leccion' })
+  @Get('reportesTiempo')
+  async reportesTiempo(@Req() req: Request) {
+    const minioClient = establecerMinio(Minio)
+    const file = getDateFielName('reporte_tiempo_leccion')
+    const fileName = `${process.env.MINIO_PATH}/${file}`;
+    await this.notaServicio.reportesTiempo(Excel,minioClient,file,fileName);
+    return this.successCreate({ reporte: file })
   }
 
   @ApiOperation({

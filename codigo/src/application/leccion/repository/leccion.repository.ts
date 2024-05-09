@@ -24,6 +24,7 @@ export class LeccionRepository {
       .createQueryBuilder('leccion')
       .select([
         'leccion.id',
+        'leccion.titulo'
       ])
       .where({ estado: Status.ACTIVE })
       .getMany()

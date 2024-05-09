@@ -27,10 +27,10 @@ export class PreguntaService extends BaseService {
     return await this.preguntaRepositorio.crear(preguntaDto, usuarioAuditoria)
   }
 
-  async listar(usuarioAuditora: string) {
+  async listar(usuarioAuditora: string, idLeccion: string) {
     const usuario = await this.usuarioRepositorio.buscarPorId(usuarioAuditora);
     if (!usuario) throw new NotFoundException(Messages.EXCEPTION_DEFAULT)
-    return await this.preguntaRepositorio.listar(usuario.idLeccion)
+    return await this.preguntaRepositorio.listar(idLeccion)
   }
 
   async actualizarDatos(

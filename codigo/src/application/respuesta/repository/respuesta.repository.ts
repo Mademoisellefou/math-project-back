@@ -4,7 +4,6 @@ import { ActualizarRespuestaDto, CrearRespuestaDto } from '../dto'
 import { Respuesta } from '../entity'
 import { PaginacionQueryDto } from '../../../common/dto/paginacion-query.dto'
 import { ObtenerLeccionDto } from '../dto/leccion-respuesta.dto'
-import { Feedback } from 'src/application/feedback/entity'
 
 @Injectable()
 export class RespuestaRepository {
@@ -57,25 +56,25 @@ export class RespuestaRepository {
     return await query.getManyAndCount()
   }
 
-  async respuestasLeccion(
-    respuestaDto: ObtenerLeccionDto,
-    usuarioAuditoria: string,
-    idLeccion: string
-  ) {
-    const { respuestas } = respuestaDto
-    const feedbacks: Feedback[] = []
-    for (let i = 0; i < respuestas.length; i++) {
-      if (respuestas[i].esCorrecta === false) {
-        const nuevoFeedback = new Feedback()
-        nuevoFeedback.idUsuario = usuarioAuditoria
-        nuevoFeedback.idPregunta = respuestas[i].idPregunta
-        nuevoFeedback.idLeccion = idLeccion
-        nuevoFeedback.usuarioCreacion = usuarioAuditoria
-        feedbacks.push(nuevoFeedback)
-      }
-    }
-    return await this.dataSource.getRepository(Feedback).save(feedbacks)
-  }
+  // async respuestasLeccion(
+  //   respuestaDto: ObtenerLeccionDto,
+  //   usuarioAuditoria: string,
+  //   idLeccion: string
+  // ) {
+  //   const { respuestas } = respuestaDto
+  //   const feedbacks: Feedback[] = []
+  //   for (let i = 0; i < respuestas.length; i++) {
+  //     if (respuestas[i].esCorrecta === false) {
+  //       const nuevoFeedback = new Feedback()
+  //       nuevoFeedback.idUsuario = usuarioAuditoria
+  //       nuevoFeedback.idPregunta = respuestas[i].idPregunta
+  //       nuevoFeedback.idLeccion = idLeccion
+  //       nuevoFeedback.usuarioCreacion = usuarioAuditoria
+  //       feedbacks.push(nuevoFeedback)
+  //     }
+  //   }
+  //   return await this.dataSource.getRepository(Feedback).save(feedbacks)
+  // }
   async crear(respuestaDto: CrearRespuestaDto, usuarioAuditoria: string) {
     const respuesta = new Respuesta()
     respuesta.texto = respuestaDto.texto

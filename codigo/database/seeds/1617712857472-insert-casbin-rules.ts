@@ -52,14 +52,15 @@ export class insertCasbinRules1617712857472 implements MigrationInterface {
       '/api/usuarios/leccion-estudiantes': {
         [RolEnum.ADMINISTRADOR]: 'GET',
       },
-      '/api/usuarios/menu': {
-        [RolEnum.TODOS]: 'GET',
+      '/api/usuarios/reportes': {
+        [RolEnum.ADMINISTRADOR]: 'GET',
       },
-      '/api/usuarios/record': {
+      '/api/usuarios/:id/record': {
         [RolEnum.TODOS]: 'GET',
       },
       '/api/usuarios/:id': {
         [RolEnum.ADMINISTRADOR]: 'PATCH',
+        [RolEnum.ESTUDIANTE]: 'PATCH',
       },
       '/api/usuarios/:id/perfil': {
         [RolEnum.TODOS]: 'GET',
@@ -98,6 +99,9 @@ export class insertCasbinRules1617712857472 implements MigrationInterface {
       '/api/mensajes': {
         [RolEnum.TODOS]: 'GET|POST',
       },
+      '/api/mensajes/mensajeAleatorio': {
+        [RolEnum.TODOS]: 'GET',
+      },
       '/api/respuestas': {
         [RolEnum.TODOS]: 'GET|POST',
       },
@@ -130,6 +134,12 @@ export class insertCasbinRules1617712857472 implements MigrationInterface {
       },
       '/api/notas': {
         [RolEnum.TODOS]: 'GET|POST',
+      },
+      '/api/notas/reportesTiempo': {
+        [RolEnum.TODOS]: 'GET',
+      },
+      '/api/notas/reportesIntentos': {
+        [RolEnum.TODOS]: 'GET',
       },
       '/api/notas/:id': {
         [RolEnum.TODOS]: 'PATCH',

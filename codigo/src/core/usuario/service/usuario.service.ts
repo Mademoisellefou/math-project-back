@@ -35,6 +35,8 @@ import { FeedbackRepository } from 'src/application/feedback/repository'
 import { RolEnum } from 'src/core/authorization/rol.enum'
 import { NotaRepository } from 'src/application/nota/repository'
 import { LeccionRepository } from 'src/application/leccion/repository'
+import { UsuarioNotaDto } from '../dto/usuario-nota.dto'
+import { conseguirNivel } from '../constantes'
 
 @Injectable()
 export class UsuarioService extends BaseService {
@@ -61,13 +63,35 @@ export class UsuarioService extends BaseService {
   async recordEstudiante(idUsuario: string) {
     return await this.usuarioRepositorio.recordEstudiante(idUsuario)
   }
+  async record(usuarioAuditoria: string, usuarioRol: string) {
+    if (!usuarioAuditoria || !usuarioRol)
+      throw new PreconditionFailedException(Messages.EXISTING_USER)
+    const listaNotas = await this.usuarioRepositorio.record();
 
-  async listar(@Query() paginacionQueryDto: FiltrosUsuarioDto) {
-    return await this.usuarioRepositorio.listar(paginacionQueryDto)
+    const listaFinal: UsuarioNotaDto[] = []
+    for (let index = 0; index < listaNotas[0].length; index++) {
+      const itemx = listaNotas[0][index];
+      const el = new UsuarioNotaDto()
+      el.id = itemx.id;
+      el.usuario = itemx.usuario
+      el.lecciones = []
+      for (let index1 = 0; index1 < itemx.notas.length; index1++) {
+        const item = itemx.notas[index1];
+        el.lecciones.push({ puntaje: item.puntaje, nombre: item.leccion.titulo.replaceAll(" ", "_") })
+      }
+      listaFinal.push(el)
+    }
+
+
+    return listaFinal
   }
 
-  async listarLecciones() {
+  async listar(@Query() paginacionQueryDto: FiltrosUsuarioDto) {
     return await this.usuarioRepositorio.listarLecciones()
+  }
+
+  async listaLecciones() {
+    return await this.leccionRepositorio.listaLecciones()
   }
 
   async menu(idUsuario: string, rol: string) {
@@ -88,34 +112,30 @@ export class UsuarioService extends BaseService {
   async buscarUsuario(usuario: string) {
     return await this.usuarioRepositorio.buscarUsuario(usuario)
   }
+  async crearReporte(usuario: string) {
 
+  }
   async crear(usuarioDto: CrearUsuarioDto, usuarioAuditoria: string) {
-    const usuario = await this.usuarioRepositorio.buscarUsuarioPorCI(
-      usuarioDto.persona
+    const usuario = await this.usuarioRepositorio.buscarUsuario(
+      usuarioDto.usuario
     )
 
     if (usuario) {
       throw new PreconditionFailedException(Messages.EXISTING_USER)
     }
 
-    const { persona, roles } = usuarioDto
+    const { roles } = usuarioDto
 
     const contrasena = usuarioDto.contrasena
+
 
     const op = async (transaction: EntityManager) => {
       usuarioDto.contrasena = await TextService.encrypt(contrasena)
       usuarioDto.estado = Status.ACTIVE
-      const persona = await this.personaRepositorio.crear(
-        usuarioDto.persona,
-        usuarioAuditoria,
-        transaction
-      )
-
       const usuario = await this.usuarioRepositorio.crear(
-        persona.id,
         {
           ...usuarioDto,
-          usuario: usuarioDto.usuario ?? usuarioDto?.persona?.nroDocumento,
+          usuario: usuarioDto.usuario ?? 'none',
         },
         usuarioAuditoria,
         usuarioDto.idLeccion,
@@ -129,19 +149,21 @@ export class UsuarioService extends BaseService {
         transaction
       )
 
-      const lecciones = await this.leccionRepositorio.listaLecciones()
-      for (let index = 0; index < lecciones.length; index++) {
-        await this.notaRepositorio.crearUsuario({
-          intentos: 0,
-          idLeccion: lecciones[index].id,
-        }, usuario.id, transaction)
-      }
-
+      // const lecciones = await this.leccionRepositorio.listaLecciones()
+      // for (let index = 0; index < lecciones.length; index++) {
+      //   await this.notaRepositorio.crearUsuario({
+      //     intentos: 0,
+      //     idLeccion: lecciones[index].id,
+      //   }, usuario.id, transaction)
+      // }
+      // await this.notaRepositorio.crearUsuario({
+      //   intentos: 0,
+      //   idLeccion: LECCION.INICIAL,
+      // }, usuario.id, transaction)
       return {
         finalizado: true,
         mensaje: 'Registro creado con éxito.',
         datos: {
-          idPersona: usuario.idPersona,
           usuario: usuario.usuario,
           estado: usuario.estado,
           idLeccion: usuario.idLeccion,
@@ -156,33 +178,6 @@ export class UsuarioService extends BaseService {
     return crearResult
   }
 
-  async activarCuenta(codigo: string) {
-    const usuario =
-      await this.usuarioRepositorio.buscarPorCodigoActivacion(codigo)
-
-    if (!usuario) {
-      throw new PreconditionFailedException(Messages.INVALID_USER)
-    }
-
-    await this.usuarioRepositorio.actualizar(
-      usuario?.id,
-      {
-        estado: Status.ACTIVE,
-        codigoActivacion: null,
-      },
-      usuario?.id
-    )
-
-    const usuarioActualizado = await this.usuarioRepositorio.buscarPorId(
-      usuario.id
-    )
-
-    if (!usuarioActualizado) {
-      throw new PreconditionFailedException(Messages.INVALID_USER)
-    }
-
-    return { id: usuarioActualizado.id, estado: usuarioActualizado.estado }
-  }
 
   async nuevaContrasenaTransaccion(nuevaContrasenaDto: NuevaContrasenaDto) {
     const usuario = await this.usuarioRepositorio.buscarPorCodigoTransaccion(
@@ -202,11 +197,8 @@ export class UsuarioService extends BaseService {
     await this.usuarioRepositorio.actualizar(
       usuario.id,
       {
-        fechaBloqueo: null,
         intentos: 0,
         codigoDesbloqueo: null,
-        codigoTransaccion: null,
-        codigoRecuperacion: null,
         contrasena: await TextService.encrypt(
           TextService.decodeBase64(nuevaContrasenaDto.contrasenaNueva)
         ),
@@ -324,7 +316,6 @@ export class UsuarioService extends BaseService {
       throw new ForbiddenException(Messages.EXCEPTION_OWN_ACCOUNT_ACTION)
     }
   }
-
   async actualizarContrasena(
     idUsuario: string,
     contrasenaActual: string,
@@ -405,89 +396,86 @@ export class UsuarioService extends BaseService {
     return { id: usuarioResult.id, estado: usuarioResult.estado }
   }
 
-  async reenviarCorreoActivacion(idUsuario: string, usuarioAuditoria: string) {
-    const usuario = await this.usuarioRepositorio.buscarPorId(idUsuario)
-    const statusValid = [Status.PENDING]
-
-    if (!(usuario && statusValid.includes(usuario.estado as Status))) {
-      throw new NotFoundException(Messages.INVALID_USER)
-    }
-
-    const op = async (transaction: EntityManager) => {
-      const codigo = TextService.generateUuid()
-      const urlActivacion = `${this.configService.get(
-        'URL_FRONTEND'
-      )}/activacion?q=${codigo}`
-
-      await this.actualizarDatosActivacion(
-        usuario.id,
-        codigo,
-        usuarioAuditoria,
-        transaction
-      )
-
-      const usuarioActualizado = await this.usuarioRepositorio.buscarPorId(
-        idUsuario,
-        transaction
-      )
-
-      if (!usuarioActualizado) {
-        throw new NotFoundException(Messages.INVALID_USER)
-      }
-
-      return usuarioActualizado
-    }
-
-    const usuarioResult = await this.usuarioRepositorio.runTransaction(op)
-
-    return { id: idUsuario, estado: usuarioResult.estado }
-  }
-
   async actualizarDatos(
     id: string,
     usuarioDto: ActualizarUsuarioRolDto,
     usuarioAuditoria: string
   ) {
-    this.verificarPermisos(id, usuarioAuditoria)
+
+    // this.verificarPermisos(id, usuarioAuditoria)
     // 1. verificar que exista el usuario
-    const op = async (transaction: EntityManager) => {
-      const usuario = await this.usuarioRepositorio.buscarPorId(id, transaction)
+    // const op = async (transaction: EntityManager) => {
+    //   const usuario = await this.usuarioRepositorio.buscarPorId(id, transaction)
 
-      if (!usuario) {
-        throw new NotFoundException(Messages.INVALID_USER)
-      }
+    //   if (!usuario) {
+    //     throw new NotFoundException(Messages.INVALID_USER)
+    //   }
 
-      const { persona } = usuarioDto
+    // const { persona } = usuarioDto
 
-      if (persona) {
-        const personaResult = await this.personaRepositorio.buscarPersonaId(
-          usuario.idPersona,
-          transaction
-        )
-        if (!personaResult) {
-          throw new PreconditionFailedException(Messages.INVALID_USER)
-        }
+    // if (persona) {
+    // const personaResult = await this.personaRepositorio.buscarPersonaId(
+    //   usuario.idPersona,
+    //   transaction
+    // )
+    // if (!personaResult) {
+    //   throw new PreconditionFailedException(Messages.INVALID_USER)
+    // }
 
-        await this.usuarioRepositorio.ActualizarDatosPersonaId(
-          personaResult.id,
-          persona,
-          transaction
-        )
-      }
+    // await this.usuarioRepositorio.ActualizarDatosPersonaId(
+    //   personaResult.id,
+    //   persona,
+    //   transaction
+    // )
+    // }
 
-      const { roles } = usuarioDto
+    // const { roles } = usuarioDto
 
-      if (roles.length > 0) {
-        // realizar reglas de roles
-        await this.actualizarRoles(id, roles, usuarioAuditoria, transaction)
-      }
+    // if (roles.length > 0) {
+    //   // realizar reglas de roles
+    //   await this.actualizarRoles(id, roles, usuarioAuditoria, transaction)
+    // }
 
-      return { id: usuario.id }
+    // return { id: usuario.id }
+
+    
+    const usuario = await this.usuarioRepositorio.buscarPorId(id)
+
+    if (!usuario) {
+      throw new NotFoundException(Messages.INVALID_USER)
     }
 
-    const usuarioResult = await this.usuarioRepositorio.runTransaction(op)
+    let nuevoEstadoTest = usuarioDto?.estadoTest ?? usuario?.estadoTest;
+    if(usuarioDto?.total){
+      nuevoEstadoTest = conseguirNivel(usuarioDto.total)
+    }
+    let nuevaPruebaRealizar= false;
+    if(usuarioDto?.pruebaRealizada!==undefined){
+      nuevaPruebaRealizar=usuarioDto?.pruebaRealizada; 
+    }else{
+      nuevaPruebaRealizar=usuario?.pruebaRealizada;
+    }
+    
+    await this.usuarioRepositorio.actualizar(
+      id,
+      {
+          usuario: usuarioDto?.usuario ?? usuario?.usuario,
+          pruebaRealizada: nuevaPruebaRealizar,
+          estadoTest: nuevoEstadoTest,
+      },
+      usuarioAuditoria
+    )
 
-    return { id: usuarioResult.id }
+    //  }
+
+    // const usuarioResult = await this.usuarioRepositorio.runTransaction(op)
+    const usuarioResult = await this.usuarioRepositorio.buscarPorId(id)
+    return {
+      usuario: usuarioResult?.usuario,
+      estado: usuarioResult?.estado,
+      pruebaRealizada: usuarioResult?.pruebaRealizada,
+      estadoTest: usuarioResult?.estadoTest
+    }
   }
 
   async actualizarRoles(
@@ -577,27 +565,25 @@ export class UsuarioService extends BaseService {
     if (!usuario) {
       throw new NotFoundException(Messages.INVALID_USER)
     }
-
     return {
       id: usuario.id,
+      pruebaRealizada: usuario.pruebaRealizada,
       usuario: usuario.usuario,
+      idLeccion: usuario.idLeccion,
+      leccion: usuario.leccion.titulo,
       estado: usuario.estado,
       roles: await Promise.all(
         usuario.usuarioRol
           .filter((value) => value.estado === Status.ACTIVE)
           .map(async (usuarioRol) => {
             const { id, rol, nombre } = usuarioRol.rol
-            const modulos =
-              await this.authorizationService.obtenerPermisosPorRol(rol)
             return {
               idRol: id,
               rol,
               nombre,
-              modulos,
             }
           })
       ),
-      persona: usuario.persona,
     }
   }
 
@@ -613,22 +599,6 @@ export class UsuarioService extends BaseService {
   }
 
 
-
-
-  async actualizarDatosActivacion(
-    idUsuario: string,
-    codigo: string,
-    usuarioAuditoria: string,
-    transaction: EntityManager
-  ) {
-    return await this.usuarioRepositorio.actualizarDatosActivacion(
-      idUsuario,
-      codigo,
-      usuarioAuditoria,
-      transaction
-    )
-  }
-
   async actualizarDatosTransaccionRecuperacion(
     idUsuario: string,
     codigo: string
@@ -639,22 +609,22 @@ export class UsuarioService extends BaseService {
     )
   }
 
-  async desbloquearCuenta(codigo: string) {
-    const usuario =
-      await this.usuarioRepositorio.buscarPorCodigoDesbloqueo(codigo)
-    if (usuario?.fechaBloqueo) {
-      await this.usuarioRepositorio.actualizar(
-        usuario.id,
-        {
-          fechaBloqueo: null,
-          intentos: 0,
-          codigoDesbloqueo: null,
-        },
-        USUARIO_NORMAL
-      )
-    }
-    return { codigo }
-  }
+  // async desbloquearCuenta(codigo: string) {
+  //   const usuario =
+  //     await this.usuarioRepositorio.buscarPorCodigoDesbloqueo(codigo)
+  //   if (usuario?.fechaBloqueo) {
+  //     await this.usuarioRepositorio.actualizar(
+  //       usuario.id,
+  //       {
+  //         fechaBloqueo: null,
+  //         intentos: 0,
+  //         codigoDesbloqueo: null,
+  //       },
+  //       USUARIO_NORMAL
+  //     )
+  //   }
+  //   return { codigo }
+  // }
 
   async actualizarDatosPersona(datosPersona: PersonaDto) {
     return await this.usuarioRepositorio.actualizarDatosPersona(datosPersona)

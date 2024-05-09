@@ -6,6 +6,8 @@ export class CrearNotaDto {
   @ApiProperty({ example: '10' })
   intentos: number
 
+  
+
   @ApiProperty({ example: 'ACTIVO' })
   @IsOptional()
   estado?: string

@@ -108,6 +108,7 @@ export class RespuestaController extends BaseController {
   @ApiProperty({
     type: ParamIdDto,
   })
+  
   @Patch('/:id/activacion')
   async activar(@Req() req: Request, @Param() params: ParamIdDto) {
     const { id: idRespuesta } = params

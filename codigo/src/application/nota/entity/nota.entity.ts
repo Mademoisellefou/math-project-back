@@ -32,6 +32,22 @@ export class Nota extends AuditoriaEntity {
     comment: 'número de intentos de lecciones',
   })
   intentos: number
+
+  @Column({
+    type: 'integer',
+    default: 0,
+    comment: 'nota  de lecciones',
+  })
+  puntaje: number
+
+
+  @Column({
+    name: 'tiempo_leccion',
+    type: 'integer',
+    default: 0,
+    comment: 'tiempo de la leccion',
+  })
+  tiempoLeccion: number
   
   @Column({
     name: 'id_usuario',

@@ -138,8 +138,13 @@ export class AuthenticationService extends BaseService {
     // construir respuesta
     const data = {
       access_token: this.jwtService.sign(payload),
-      ...usuario,
+      pruebaRealizada: usuario.pruebaRealizada,
+      usuario: usuario.usuario,
+      id: usuario.id,
+      idLeccion: usuario.idLeccion,
+      leccion: usuario.leccion,
       idRol: rol.idRol,
+      estado: usuario.estado,
       rol: rol.rol,
     }
     return {

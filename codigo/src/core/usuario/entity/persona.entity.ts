@@ -127,8 +127,8 @@ export class Persona extends AuditoriaEntity {
   })
   observacion?: string | null
 
-  @OneToMany(() => Usuario, (usuario) => usuario.persona)
-  usuarios: Usuario[]
+  // @OneToMany(() => Usuario, (usuario) => usuario.persona)
+  // usuarios: Usuario[]
 
   constructor(data?: Partial<Persona>) {
     super(data)

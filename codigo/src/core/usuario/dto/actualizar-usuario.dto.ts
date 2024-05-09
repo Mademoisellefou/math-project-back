@@ -8,7 +8,7 @@ export class ActualizarUsuarioDto {
 
   @ApiProperty()
   @IsOptional()
-  correoElectronico?: string
+  usuario?: string
 
   @ApiProperty()
   @IsOptional()
@@ -22,24 +22,15 @@ export class ActualizarUsuarioDto {
   @IsOptional()
   intentos?: number | null
 
-  @ApiProperty()
-  @IsOptional()
-  fechaBloqueo?: string | null
 
   @ApiProperty()
   @IsOptional()
   codigoDesbloqueo?: string | null
 
-  @ApiProperty()
-  @IsOptional()
-  codigoActivacion?: string | null
-
-  @ApiProperty()
-  @IsOptional()
-  codigoTransaccion?: string | null
-
-  @ApiProperty()
-  @IsOptional()
-  codigoRecuperacion?: string | null
+  @ApiProperty({ example: 'false' })
+  pruebaRealizada?: boolean
+  
+  @ApiProperty({ example: 'BAJO' })
+  estadoTest?: string | null
 
 }

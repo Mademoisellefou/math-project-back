@@ -35,9 +35,10 @@ export class PreguntaController extends BaseController {
 
   @ApiOperation({ summary: 'API para obtener el listado de preguntas' })
   @Get(':id')
-  async listar(@Param() params: ParamIdDto) {
-    const { id: idUsuario } = params
-    const result = await this.preguntaServicio.listar(idUsuario)
+  async listar(@Req() req: Request, @Param() params: ParamIdDto) {
+    const usuarioAuditoria = this.getUser(req)
+    const { id: idLeccion } = params
+    const result = await this.preguntaServicio.listar(usuarioAuditoria, idLeccion)
     return this.successList(result)
   }
 
