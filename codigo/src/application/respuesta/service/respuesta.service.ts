@@ -43,6 +43,11 @@ export class RespuestaService extends BaseService {
     if (!nota) {
       throw new NotFoundException('No existe nota')
     }
+    if (actualizarIntentos) {
+      console.log("actualizar");
+    }else{
+      console.log("aumento");
+    }
     const intentos: number = actualizarIntentos ? nota.intentos + 1 : nota.intentos;
     await this.notaRepositorio.actualizar(nota.id, { intentos: intentos, tiempoLeccion: parseInt(tiempoLeccion, 10), puntaje }, idUsuario, transaction);
   }
@@ -99,7 +104,12 @@ export class RespuestaService extends BaseService {
       }
       await this.usuarioRepositorio.runTransaction(op)
     }
+    console.log(respuestaDto.preguntasCorrectas);
+    console.log(respuestaDto.tiempoLeccion);
+    console.log("0000000000000000000000000");
+    
     if (parseInt(respuestaDto.preguntasCorrectas, 10) >= parseInt(RespuestasCorrectas.NROMIN, 10)) {
+      console.log("Avanzo");
       await this.siguienteNivel(leccion, usuarioAuditoria, respuestaDto);
       const usuarioActualizado = await this.usuarioRepositorio.perfilUsuario(usuarioAuditoria);
       if (!usuarioActualizado) throw new NotFoundException(Messages.NO_LESSON_FOUND)

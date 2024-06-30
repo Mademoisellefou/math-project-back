@@ -197,7 +197,7 @@ export class UsuarioService extends BaseService {
     await this.usuarioRepositorio.actualizar(
       usuario.id,
       {
-        intentos: 0,
+        // intentos: 0,
         codigoDesbloqueo: null,
         contrasena: await TextService.encrypt(
           TextService.decodeBase64(nuevaContrasenaDto.contrasenaNueva)
@@ -591,12 +591,12 @@ export class UsuarioService extends BaseService {
     return await this.usuarioRepositorio.buscarUsuarioPorCI(persona)
   }
 
-  async actualizarContadorBloqueos(idUsuario: string, intento: number) {
-    return await this.usuarioRepositorio.actualizarContadorBloqueos(
-      idUsuario,
-      intento
-    )
-  }
+  // async actualizarContadorBloqueos(idUsuario: string, intento: number) {
+  //   return await this.usuarioRepositorio.actualizarContadorBloqueos(
+  //     idUsuario,
+  //     intento
+  //   )
+  // }
 
 
   async actualizarDatosTransaccionRecuperacion(

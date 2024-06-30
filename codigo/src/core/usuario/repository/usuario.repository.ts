@@ -142,6 +142,9 @@ export class UsuarioRepository {
       .select([
         'usuario.usuario',
         'usuario.id',
+        'usuario.nombres',
+        'usuario.primerApellido',
+        'usuario.segundoApellido',
         'nota.leccion',
         'nota.intentos',
         'nota.puntaje',
@@ -163,7 +166,11 @@ export class UsuarioRepository {
         'usuario.usuario',
         'usuario.id',
         'usuario.estado',
-        'leccion.titulo'
+        'usuario.nombres',
+        'usuario.primerApellido',
+        'usuario.segundoApellido',
+        'leccion.titulo',
+        'usuario.estadoTest'
       ])
       .where('usuario.estado = :estado', { estado: Status.ACTIVE })
       .andWhere('rol.rol = :nombreRol', { nombreRol: RolEnum.ESTUDIANTE })
@@ -312,23 +319,23 @@ export class UsuarioRepository {
       estado: usuarioDto.estado || undefined,
       contrasena: usuarioDto.contrasena || undefined,
       usuarioModificacion: usuarioAuditoria,
-      intentos: usuarioDto.intentos || undefined,
+      // intentos: usuarioDto.intentos || undefined,
       pruebaRealizada: usuarioDto.pruebaRealizada,
       estadoTest: usuarioDto.estadoTest || undefined
     })
     return await repo.update(idUsuario, datosActualizar)
   }
 
-  async actualizarContadorBloqueos(idUsuario: string, intento: number) {
-    return await this.dataSource
-      .createQueryBuilder()
-      .update(Usuario)
-      .set({
-        intentos: intento,
-      })
-      .where({ id: idUsuario })
-      .execute()
-  }
+  // async actualizarContadorBloqueos(idUsuario: string, intento: number) {
+  //   return await this.dataSource
+  //     .createQueryBuilder()
+  //     .update(Usuario)
+  //     .set({
+  //       intentos: intento,
+  //     })
+  //     .where({ id: idUsuario })
+  //     .execute()
+  // }
 
   // async actualizarDatosActivacion(
   //   idUsuario: string,

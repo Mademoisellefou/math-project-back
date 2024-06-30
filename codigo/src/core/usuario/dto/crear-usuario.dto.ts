@@ -16,6 +16,21 @@ export class CrearUsuarioDto {
   @ApiProperty({ example: 'username' })
   @IsNotEmpty()
   usuario: string
+  
+  @ApiProperty({ example: 'nombres' })
+  @IsNotEmpty()
+  nombres: string
+  @ApiProperty({ example: 'primerApellido' })
+  @IsNotEmpty()
+  primerApellido: string
+  @ApiProperty({ example: 'segundoApellido' })
+  @IsNotEmpty()
+  segundoApellido: string
+
+
+
+
+
   @ApiProperty({ example: '1234sad._' })
   @IsNotEmpty()
   contrasena: string

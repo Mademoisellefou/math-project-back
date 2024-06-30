@@ -51,5 +51,6 @@ export enum LECCION {
 
 
 
+
 export const USUARIO_SISTEMA = '1'
 export const USUARIO_NORMAL = '0'

@@ -38,6 +38,7 @@ import {
 } from '@nestjs/swagger'
 import { ConfigService } from '@nestjs/config'
 import { Request } from 'express'
+import { configurarMINIO, establecerFecha } from '../constantes'
 
 @Controller('usuarios')
 @ApiTags('Usuarios')
@@ -87,18 +88,9 @@ export class UsuarioController extends BaseController {
     const usuarioAuditoria = this.getUser(req)
     const usuarioRol = this.getRol(req);
     const data = await this.usuarioService.record(usuarioAuditoria, usuarioRol);
-    const minioClient = new Minio.Client({
-      endPoint: process.env.MINIO_ENDPOINT?.toString() ?? '',
-      port: Number(process.env.MINIO_PORT?.toString()) ?? 443,
-      accessKey: process.env.MINIO_ACCESSKEY?.toString() ?? '',
-      secretKey: process.env.MINIO_SECRETKEY?.toString() ?? '',
-      useSSL: true,
-      region: process.env.MINIO_REGION?.toString() ?? ''
-    })
-    const currentDate = new Date();
-    const formattedDate = currentDate.toISOString().slice(0, 10);
-    const nombre = "reporte-tutor-mate-estudiantes";
-    const file = `${nombre}_${formattedDate}.xlsx`;
+    const minioClient = configurarMINIO(Minio)
+  
+    const file = establecerFecha('reporter decargado');//`${nombre}_${formattedDate}.xlsx`;
     const fileName = `${process.env.MINIO_PATH}/${file}`;
 
     const wb = new Excel.Workbook();
@@ -190,9 +182,6 @@ export class UsuarioController extends BaseController {
     return this.successUpdate(result)
   }
 
-
-
-  //update user
   @ApiOperation({ summary: 'Actualiza datos de un usuario' })
   @ApiBearerAuth()
   @ApiProperty({

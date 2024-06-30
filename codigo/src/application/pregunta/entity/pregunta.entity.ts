@@ -16,6 +16,7 @@ import { PreguntaEstado } from '../constant'
 import { Leccion } from 'src/application/leccion/entity'
 import { Respuesta } from 'src/application/respuesta/entity'
 import { Feedback } from 'src/application/feedback/entity'
+import { NivelEnum } from 'src/core/usuario/constantes'
 
 dotenv.config()
 
@@ -28,6 +29,16 @@ export class Pregunta extends AuditoriaEntity {
     comment: 'Clave primaria de la tabla Parámetro',
   })
   id: string
+
+  @Column({
+    name: 'nivel',
+    length: 30,
+    type: 'varchar',
+    nullable: false,
+    default: NivelEnum.BAJO,
+    comment: 'Nivel de dificultad',
+  })
+  nivel: string
 
   @Column({
     length: 1000,
@@ -52,6 +63,7 @@ export class Pregunta extends AuditoriaEntity {
     comment: 'Clave foránea de leccion',
   })
   idLeccion: string
+
   @ManyToOne(() => Leccion, (leccion) => leccion.preguntas, { nullable: false })
   @JoinColumn({ name: 'id_leccion', referencedColumnName: 'id' })
   leccion: Leccion

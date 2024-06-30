@@ -71,12 +71,12 @@ export class Usuario extends AuditoriaEntity {
   @OneToMany(() => Feedback, (feedback) => feedback.usuario)
   feedbacks: Feedback[]
 
-  @Column({
-    type: 'integer',
-    default: 0,
-    comment: 'número de intentos de lecciones',
-  })
-  intentos: number
+  // @Column({
+  //   type: 'integer',
+  //   default: 0,
+  //   comment: 'número de intentos de lecciones',
+  // })
+  // intentos: number
 
   @OneToMany(() => UsuarioRol, (usuarioRol) => usuarioRol.usuario)
   usuarioRol: UsuarioRol[]
@@ -97,6 +97,32 @@ export class Usuario extends AuditoriaEntity {
     comment: 'Indica si el estudiante realizo linkerd test',
   })
   pruebaRealizada: boolean
+
+  @Column({
+    length: 100,
+    type: 'varchar',
+    nullable: true,
+    comment: 'Nombre de la persona',
+  })
+  nombres?: string | null
+
+  @Column({
+    name: 'primer_apellido',
+    type: 'varchar',
+    length: 100,
+    nullable: true,
+    comment: 'Primer apellido de la persona',
+  })
+  primerApellido?: string | null
+
+  @Column({
+    name: 'segundo_apellido',
+    type: 'varchar',
+    length: 100,
+    nullable: true,
+    comment: 'Segundo apellido de la persona',
+  })
+  segundoApellido?: string | null
 
   @Column({
     name: 'estado_test',

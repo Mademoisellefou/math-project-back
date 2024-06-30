@@ -18,9 +18,9 @@ export class ActualizarUsuarioDto {
   @IsOptional()
   contrasena?: string | null
 
-  @ApiProperty()
-  @IsOptional()
-  intentos?: number | null
+  // @ApiProperty()
+  // @IsOptional()
+  // intentos?: number | null
 
 
   @ApiProperty()
