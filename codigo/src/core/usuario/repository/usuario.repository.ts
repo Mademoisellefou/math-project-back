@@ -287,6 +287,9 @@ export class UsuarioRepository {
     return await transaction.getRepository(Usuario).save(
       new Usuario({
         usuario: usuarioDto.usuario,
+        primerApellido: usuarioDto.primerApellido,
+        segundoApellido: usuarioDto.segundoApellido,
+        nombres: usuarioDto.nombres,
         estado: usuarioDto?.estado ?? Status.CREATE,
         idLeccion: idLeccion,
         contrasena:

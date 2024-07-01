@@ -54,7 +54,6 @@ export class LeccionRepository {
         'leccion.codigo',
         'leccion.titulo',
         'leccion.descripcion',
-        'leccion.idUsuario',
         'leccion.estado',
       ])
       .take(limite)

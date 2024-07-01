@@ -5,4 +5,7 @@ export class UsuarioDto {
   estado?: string
   contrasena?: string
   usuarioCreacion?: string
+  primerApellido: string
+  segundoApellido?: string
+  nombres: string
 }
