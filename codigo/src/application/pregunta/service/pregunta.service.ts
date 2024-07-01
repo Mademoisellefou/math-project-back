@@ -11,7 +11,8 @@ import { Messages } from '../../../common/constants/response-messages'
 import { ActualizarPreguntaDto } from '../dto'
 import { PreguntaEstado } from '../constant'
 import { UsuarioRepository } from 'src/core/usuario/repository/usuario.repository'
-
+import { EntityManager } from 'typeorm'
+import { RespuestaRepository } from 'src/application/respuesta/repository'
 @Injectable()
 export class PreguntaService extends BaseService {
   constructor(
@@ -19,12 +20,40 @@ export class PreguntaService extends BaseService {
     private preguntaRepositorio: PreguntaRepository,
     @Inject(UsuarioRepository)
     private usuarioRepositorio: UsuarioRepository,
+    @Inject(RespuestaRepository)
+    private respuestaRepositorio: RespuestaRepository,
   ) {
     super()
   }
 
   async crear(preguntaDto: CrearPreguntaDto, usuarioAuditoria: string) {
-    return await this.preguntaRepositorio.crear(preguntaDto, usuarioAuditoria)
+    const { respuestas } = preguntaDto
+
+    const op = async (transaction: EntityManager) => {
+
+      const pregunta = await this.preguntaRepositorio.crear(
+        preguntaDto,
+        usuarioAuditoria,
+        transaction
+      )
+
+      for (let index = 0; index < respuestas.length; index++) {
+        await this.respuestaRepositorio.crear(
+          {
+            ...respuestas[index],
+            idPregunta: pregunta.id,
+          },
+          usuarioAuditoria,
+          transaction
+        )
+      }
+      return { idPregunta: pregunta.id }
+    }
+
+    const crearResult = await this.usuarioRepositorio.runTransaction(op)
+    return crearResult
+
+    // return await this.preguntaRepositorio.crear(preguntaDto, usuarioAuditoria)
   }
 
   async listar(usuarioAuditora: string, idLeccion: string) {

@@ -7,7 +7,7 @@ export class CrearRespuestaDto {
   texto: string
 
   @ApiProperty({ example: 'Explicacion' })
-  explicacion: String
+  explicacion?: string
 
   @ApiProperty({ example: '1' })
   @IsNotEmpty()

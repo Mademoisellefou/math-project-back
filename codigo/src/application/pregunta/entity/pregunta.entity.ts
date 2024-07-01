@@ -15,7 +15,6 @@ import { AuditoriaEntity } from '../../../common/entity/auditoria.entity'
 import { PreguntaEstado } from '../constant'
 import { Leccion } from 'src/application/leccion/entity'
 import { Respuesta } from 'src/application/respuesta/entity'
-import { Feedback } from 'src/application/feedback/entity'
 import { NivelEnum } from 'src/core/usuario/constantes'
 
 dotenv.config()

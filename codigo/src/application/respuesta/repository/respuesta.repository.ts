@@ -1,13 +1,14 @@
-import { Brackets, DataSource } from 'typeorm'
+import { Brackets, DataSource, EntityManager } from 'typeorm'
 import { Injectable } from '@nestjs/common'
 import { ActualizarRespuestaDto, CrearRespuestaDto } from '../dto'
 import { Respuesta } from '../entity'
 import { PaginacionQueryDto } from '../../../common/dto/paginacion-query.dto'
 import { ObtenerLeccionDto } from '../dto/leccion-respuesta.dto'
+import { Status } from 'src/common/constants'
 
 @Injectable()
 export class RespuestaRepository {
-  constructor(private dataSource: DataSource) {}
+  constructor(private dataSource: DataSource) { }
 
   async buscarPorId(id: string) {
     return await this.dataSource
@@ -75,12 +76,37 @@ export class RespuestaRepository {
   //   }
   //   return await this.dataSource.getRepository(Feedback).save(feedbacks)
   // }
-  async crear(respuestaDto: CrearRespuestaDto, usuarioAuditoria: string) {
-    const respuesta = new Respuesta()
-    respuesta.texto = respuestaDto.texto
-    respuesta.esCorrecta = respuestaDto.esCorrecta
-    respuesta.idPregunta = respuestaDto.idPregunta
-    respuesta.usuarioCreacion = usuarioAuditoria
-    return await this.dataSource.getRepository(Respuesta).save(respuesta)
+  // async crear(respuestaDto: CrearRespuestaDto, usuarioAuditoria: string) {
+  //   const respuesta = new Respuesta()
+  //   respuesta.texto = respuestaDto.texto
+  //   respuesta.esCorrecta = respuestaDto.esCorrecta
+  //   respuesta.idPregunta = respuestaDto.idPregunta
+  //   respuesta.explicacion = respuestaDto.explicacion??""
+  //   respuesta.usuarioCreacion = usuarioAuditoria
+  //   return await this.dataSource.getRepository(Respuesta).save(respuesta)
+  // }
+  async crear(respuestaDto: CrearRespuestaDto, usuarioAuditoria: string, transaction?: EntityManager) {
+    if (transaction) {
+      return await transaction.getRepository(Respuesta).save(
+        new Respuesta({
+          texto: respuestaDto.texto,
+          esCorrecta: respuestaDto.esCorrecta,
+          idPregunta: respuestaDto.idPregunta,
+          explicacion: respuestaDto.explicacion ?? "",
+          usuarioCreacion: usuarioAuditoria,
+          estado: respuestaDto?.estado ?? Status.ACTIVE
+        })
+      )
+    }
+    else {
+      const respuesta = new Respuesta()
+      respuesta.texto = respuestaDto.texto
+      respuesta.esCorrecta = respuestaDto.esCorrecta
+      respuesta.idPregunta = respuestaDto.idPregunta
+      respuesta.explicacion = respuestaDto.explicacion ?? ""
+      respuesta.usuarioCreacion = usuarioAuditoria
+      return await this.dataSource.getRepository(Respuesta).save(respuesta)
+    }
   }
+
 }

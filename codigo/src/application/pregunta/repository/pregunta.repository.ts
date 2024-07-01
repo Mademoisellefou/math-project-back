@@ -1,9 +1,10 @@
-import { Brackets, DataSource } from 'typeorm'
+import { Brackets, DataSource, EntityManager } from 'typeorm'
 import { Injectable } from '@nestjs/common'
 import { ActualizarPreguntaDto, CrearPreguntaDto } from '../dto'
 import { Pregunta } from '../entity'
 import { PaginacionQueryDto } from '../../../common/dto/paginacion-query.dto'
 import { Status } from 'src/common/constants'
+import { NivelEnum } from 'src/core/usuario/constantes'
 
 @Injectable()
 export class PreguntaRepository {
@@ -98,17 +99,25 @@ export class PreguntaRepository {
       .andWhere({ estado: Status.ACTIVE })
       .take(limite)
       .skip(saltar)
-    console.log('Preguntas=>');
-    console.log(await query.getMany());
     return await query.getMany()
   }
 
-  async crear(preguntaDto: CrearPreguntaDto, usuarioAuditoria: string) {
-    const pregunta = new Pregunta()
-    pregunta.texto = preguntaDto.texto
-    pregunta.idLeccion = preguntaDto.idLeccion
-    pregunta.usuarioCreacion = usuarioAuditoria
-
-    return await this.dataSource.getRepository(Pregunta).save(pregunta)
+  async crear(preguntaDto: CrearPreguntaDto, usuarioAuditoria: string, transaction: EntityManager) {
+    return await transaction.getRepository(Pregunta).save(
+      new Pregunta({
+        texto: preguntaDto.texto,
+        idLeccion: preguntaDto.idLeccion,
+        usuarioCreacion: usuarioAuditoria,
+        nivel: preguntaDto?.nivel?? NivelEnum.BAJO,
+        estado: preguntaDto?.estado ?? Status.ACTIVE
+      })
+    )
+    
+    // const pregunta = new Pregunta()
+    // pregunta.texto = preguntaDto.texto
+    // pregunta.idLeccion = preguntaDto.idLeccion
+    // pregunta.usuarioCreacion = usuarioAuditoria
+    // pregunta.nivel = preguntaDto?.nivel?? NivelEnum.BAJO
+    // return await this.dataSource.getRepository(Pregunta).save(pregunta)
   }
 }

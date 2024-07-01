@@ -33,7 +33,7 @@ export class PreguntaController extends BaseController {
     super()
   }
 
-  @ApiOperation({ summary: 'API para obtener el listado de preguntas' })
+  @ApiOperation({ summary: 'API para obtener preguntas' })
   @Get(':id')
   async listar(@Req() req: Request, @Param() params: ParamIdDto) {
     const usuarioAuditoria = this.getUser(req)
