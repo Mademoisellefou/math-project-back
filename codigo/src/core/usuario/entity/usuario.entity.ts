@@ -104,7 +104,7 @@ export class Usuario extends AuditoriaEntity {
     nullable: true,
     comment: 'Nombre de la persona',
   })
-  nombres?: string | null
+  nombres: string
 
   @Column({
     name: 'primer_apellido',
@@ -113,7 +113,7 @@ export class Usuario extends AuditoriaEntity {
     nullable: true,
     comment: 'Primer apellido de la persona',
   })
-  primerApellido?: string | null
+  primerApellido: string
 
   @Column({
     name: 'segundo_apellido',
@@ -122,7 +122,7 @@ export class Usuario extends AuditoriaEntity {
     nullable: true,
     comment: 'Segundo apellido de la persona',
   })
-  segundoApellido?: string | null
+  segundoApellido: string
 
   @Column({
     name: 'estado_test',

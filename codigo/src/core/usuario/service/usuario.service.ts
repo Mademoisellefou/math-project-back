@@ -66,14 +66,15 @@ export class UsuarioService extends BaseService {
   async record(usuarioAuditoria: string, usuarioRol: string) {
     if (!usuarioAuditoria || !usuarioRol)
       throw new PreconditionFailedException(Messages.EXISTING_USER)
-    const listaNotas = await this.usuarioRepositorio.record();
-
+    const listaNotas = await this.usuarioRepositorio.record();    
     const listaFinal: UsuarioNotaDto[] = []
     for (let index = 0; index < listaNotas[0].length; index++) {
       const itemx = listaNotas[0][index];
       const el = new UsuarioNotaDto()
-      el.id = itemx.id;
       el.usuario = itemx.usuario
+      el.nombres = itemx.nombres
+      el.primerApellido = itemx.primerApellido
+      el.segundoApellido = itemx.segundoApellido
       el.lecciones = []
       for (let index1 = 0; index1 < itemx.notas.length; index1++) {
         const item = itemx.notas[index1];

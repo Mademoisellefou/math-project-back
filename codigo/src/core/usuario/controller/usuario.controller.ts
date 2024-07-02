@@ -89,15 +89,16 @@ export class UsuarioController extends BaseController {
     const usuarioRol = this.getRol(req);
     const data = await this.usuarioService.record(usuarioAuditoria, usuarioRol);
     const minioClient = configurarMINIO(Minio)
-  
+    
     const file = establecerFecha('reporter decargado');//`${nombre}_${formattedDate}.xlsx`;
     const fileName = `${process.env.MINIO_PATH}/${file}`;
 
     const wb = new Excel.Workbook();
-    const ws = wb.addWorksheet('My Sheet');
+    const ws = wb.addWorksheet('Reporte');
     const lecciones = await this.usuarioService.listaLecciones();
     const nombreLecciones = lecciones.map(ele => ele.titulo)
     const leccionesCol: any = []
+
     for (let index = 0; index < nombreLecciones.length; index++) {
       const leccion = nombreLecciones[index];
       leccionesCol.push({ header: leccion, key: leccion.replaceAll(' ', '_'), width: 32 })
@@ -105,11 +106,14 @@ export class UsuarioController extends BaseController {
     ws.columns = [
       { header: 'Id', key: 'id', width: 8 },
       { header: 'Usuario', key: 'usuario', width: 32 },
+      { header: 'Nombres', key: 'nombres', width: 32 },
+      { header: 'Ap. Paterno', key: 'primerApellido', width: 32 },
+      { header: 'Ap. Materno', key: 'segundoApellido', width: 32 },
       ...leccionesCol
     ];
     for (let index = 0; index < data.length; index++) {
       const element = data[index];
-      const row = { id: element.id, usuario: element.usuario }
+      const row = { id: index + 1, usuario: element.usuario, nombres: element.nombres, primerApellido: element.primerApellido, segundoApellido: element.segundoApellido }
       for (let index1 = 0; index1 < element.lecciones.length; index1++) {
         row[element.lecciones[index1].nombre] = element.lecciones[index1].puntaje
       }

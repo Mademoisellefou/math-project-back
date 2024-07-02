@@ -4,8 +4,9 @@ export interface NotaPuntajeDto {
     nombre: string
 }
 export class UsuarioNotaDto {
-    id: string;
     usuario: string;
     lecciones: NotaPuntajeDto[];
-
+    nombres: string;
+    primerApellido: string;
+    segundoApellido: string;
 }
