@@ -49,7 +49,7 @@ const bootstrap = async () => {
    createSwagger(app)
  }
 
-// createSwagger(app)
+ createSwagger(app)
 
   await SessionAppDataSource.initialize()
 
