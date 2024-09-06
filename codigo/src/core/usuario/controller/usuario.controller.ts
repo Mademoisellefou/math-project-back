@@ -38,7 +38,7 @@ import {
 } from '@nestjs/swagger'
 import { ConfigService } from '@nestjs/config'
 import { Request } from 'express'
-import { configurarMINIO, establecerFecha } from '../constantes'
+import { configurarMINIO, establecerFecha, getDateFielName } from '../constantes'
 
 @Controller('usuarios')
 @ApiTags('Usuarios')
