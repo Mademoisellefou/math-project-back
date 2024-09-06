@@ -39,6 +39,8 @@ export class PreguntaController extends BaseController {
     const usuarioAuditoria = this.getUser(req)
     const { id: idLeccion } = params
     const result = await this.preguntaServicio.listar(usuarioAuditoria, idLeccion)
+    console.log("test--------------------");
+    console.log(result);
     return this.successList(result)
   }
 
