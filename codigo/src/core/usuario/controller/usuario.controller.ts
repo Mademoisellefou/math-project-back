@@ -89,8 +89,7 @@ export class UsuarioController extends BaseController {
     const usuarioRol = this.getRol(req);
     const data = await this.usuarioService.record(usuarioAuditoria, usuarioRol);
     const minioClient = configurarMINIO(Minio)
-    
-    const file = establecerFecha(`${nombre}_${formattedDate}.xlsx`);;
+    const file = getDateFielName('reporte_general_estudiantes')
     const fileName = `${process.env.MINIO_PATH}/${file}`;
 
     const wb = new Excel.Workbook();
