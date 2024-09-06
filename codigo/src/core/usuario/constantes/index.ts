@@ -28,6 +28,11 @@ export const configurarMINIO = (Minio) => {
         region: process.env.MINIO_REGION?.toString() ?? ''
     })
 }
+export const getDateFielName = (nombre: string) => {
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString().slice(0, 10);
+    return `${nombre}_${formattedDate}.xlsx`;
+}
 export const establecerFecha=(name: string)=>{
     const currentDate = new Date();
     const formattedDate = currentDate.toISOString().slice(0, 10);
